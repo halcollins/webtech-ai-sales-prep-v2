@@ -114,7 +114,7 @@ export default function AdminLogin() {
             <Shield className="h-7 w-7 text-destructive-foreground" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">Admin Console</h1>
-          <p className="text-muted-foreground">WebTECH Call Prep AI</p>
+          <p className="text-muted-foreground">WebTECH Sales Prep AI</p>
         </div>
 
         <Card className="border-border/50 bg-card/50 backdrop-blur-sm shadow-elevated">
