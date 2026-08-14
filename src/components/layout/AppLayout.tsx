@@ -26,7 +26,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               </div>
               <div>
                 <h1 className="tracking-tight font-medium text-lg">​WebTECH</h1>
-                <p className="text-xs text-muted-foreground text-center">Call Prep AI</p>
+                <p className="text-xs text-muted-foreground text-center">Sales Prep AI</p>
               </div>
             </Link>
 
