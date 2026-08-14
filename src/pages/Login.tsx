@@ -54,7 +54,7 @@ export default function Login() {
         if (isSignUp) {
           toast({
             title: "Account Created",
-            description: "Welcome to WebTECH Call Prep AI!",
+            description: "Welcome to WebTECH Sales Prep AI!",
           });
         }
         navigate("/");
@@ -78,7 +78,7 @@ export default function Login() {
             <FileText className="h-7 w-7 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">WebTECH</h1>
-          <p className="text-muted-foreground">Call Prep AI</p>
+          <p className="text-muted-foreground">Sales Prep AI</p>
         </div>
 
         <Card className="border-border/50 bg-card/50 backdrop-blur-sm shadow-elevated">
