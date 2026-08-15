@@ -353,7 +353,7 @@ async function fetchWebsiteContent(
 
     // Fetch homepage
     const homeResponse = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+      headers: { "User-Agent": userAgent },
       signal: controller.signal,
     });
 
@@ -391,7 +391,7 @@ async function fetchWebsiteContent(
             const aboutTimeoutId = setTimeout(() => aboutController.abort(), 10000);
 
             const aboutResponse = await fetch(aboutUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+              headers: { "User-Agent": userAgent },
               signal: aboutController.signal,
             });
 
@@ -427,7 +427,7 @@ async function fetchWebsiteContent(
             const careersTimeoutId = setTimeout(() => careersController.abort(), 10000);
 
             const careersResponse = await fetch(careersUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+              headers: { "User-Agent": userAgent },
               signal: careersController.signal,
             });
 
@@ -464,7 +464,7 @@ async function fetchWebsiteContent(
             const teamTimeoutId = setTimeout(() => teamController.abort(), 10000);
 
             const teamResponse = await fetch(teamUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+              headers: { "User-Agent": userAgent },
               signal: teamController.signal,
             });
 
