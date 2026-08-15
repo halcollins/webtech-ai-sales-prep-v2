@@ -59,6 +59,8 @@ Same profile load and 500 guard; system prompt rewritten around `company_name`, 
 - `generateMarkdown` — renamed references, "How We Help", "Recommended Angle", "First Touch" / "Live Conversation" headings, careers/seniority lines replaced by the `opportunity_signals` fields.
 - `BriefingDisplay.tsx` — renames and section labels only; card structure, layout and styling untouched.
 - `exportWord.ts` — renames plus "Why They Need Us" and "Value Connection:".
+- `staffing_implication` -> `why_it_matters` everywhere it appears: `src/lib/schemas.ts` (2), `BriefingDisplay.tsx` (3), `exportWord.ts` (3), with the exported label changed from "Staffing Implication:" to "Why It Matters:". `ai_technology_investments` and `recent_news` stay exactly as they are — optional and ungenerated; they are not added to the edge function schema or prompt in this stage.
+
 - `Dashboard.tsx` — "AI-powered company research for sales teams".
 - `CompanyForm.tsx` — "What made you think they might be a fit?".
 - Codebase sweep for remaining "Inceed / staffing / recruiter / recruiting" strings: the `src/index.css` theme comment and the `recommended_inceed_angle` reference in `BriefingDetail.tsx` line 205 (a CRM-copy string builder, not admin visibility logic) are the two extras found. Repo, project and table names unchanged.
@@ -67,9 +69,10 @@ Same profile load and 500 guard; system prompt rewritten around `company_name`, 
 
 A recursive `stripNullBytes` helper in each edge function, applied to `companyBriefing` and `briefingMd` before the `briefings` insert, and to the enrichment payload before its insert — avoiding Postgres 22P05.
 
-## One correction to flag
+## Scope note on BriefingDetail.tsx
 
-Part 6d says `staffing_implication` is dead code. It is not: the current Zod schema defines it on both `recent_news.items[]` and `ai_technology_investments`, and the edge function emits it. Removing the export path would silently drop a rendered section, which conflicts with "preserve every existing briefing section". Plan: keep those fields but rename the exported label from "Staffing Implication" to "Why It Matters" so nothing is lost and no seller-specific wording remains. If you would rather have the field genuinely removed from schema, prompt and UI, say so and I will do that instead.
+Only the `recommended_inceed_angle` reference inside the CRM copy string builder (line 205) is touched. The admin visibility logic in that file is left exactly as-is.
+
 
 ## Technical notes
 
