@@ -138,12 +138,12 @@ export async function exportBriefingToWord(
       children.push(new Paragraph({ text: ati.strategic_positioning, spacing: { after: 150 } }));
     }
 
-    if (ati.staffing_implication) {
+    if (ati.why_it_matters) {
       children.push(new Paragraph({
-        children: [new TextRun({ text: "Staffing Implication:", bold: true })],
+        children: [new TextRun({ text: "Why It Matters:", bold: true })],
         spacing: { before: 150, after: 80 },
       }));
-      children.push(new Paragraph({ text: ati.staffing_implication, spacing: { after: 200 } }));
+      children.push(new Paragraph({ text: ati.why_it_matters, spacing: { after: 200 } }));
     }
   }
 
@@ -158,8 +158,8 @@ export async function exportBriefingToWord(
       }));
       children.push(new Paragraph({
         children: [
-          new TextRun({ text: "Staffing angle: ", bold: true }),
-          new TextRun(item.staffing_implication),
+          new TextRun({ text: "Why it matters: ", bold: true }),
+          new TextRun(item.why_it_matters),
         ],
         spacing: { after: 150 },
       }));
@@ -168,9 +168,9 @@ export async function exportBriefingToWord(
   }
 
   // Why They Need Staffing
-  if (briefing.why_they_need_staffing) {
+  if (briefing.why_they_need_you) {
     children.push(createHeading("💡 Why Staffing Makes Sense", HeadingLevel.HEADING_1));
-    const wts = briefing.why_they_need_staffing;
+    const wts = briefing.why_they_need_you;
     
     children.push(new Paragraph({
       children: [new TextRun({ text: "Pain Point:", bold: true })],
@@ -188,12 +188,12 @@ export async function exportBriefingToWord(
       children: [new TextRun({ text: "Inceed Value:", bold: true })],
       spacing: { before: 100, after: 80 },
     }));
-    children.push(new Paragraph({ text: wts.inceed_value_connection, spacing: { after: 200 } }));
+    children.push(new Paragraph({ text: wts.value_connection, spacing: { after: 200 } }));
   }
 
   // Likely Hiring Gaps
   children.push(createHeading("🎯 Key Hiring Gaps", HeadingLevel.HEADING_1));
-  briefing.likely_hiring_and_gaps.forEach((role, index) => {
+  briefing.identified_gaps.forEach((role, index) => {
     children.push(new Paragraph({
       children: [
         new TextRun({ text: `${index + 1}. ${role.role_title}`, bold: true }),
@@ -212,7 +212,7 @@ export async function exportBriefingToWord(
 
   // Recommended Angle
   children.push(createHeading("🚀 Recommended Approach", HeadingLevel.HEADING_1));
-  const angle = briefing.recommended_inceed_angle;
+  const angle = briefing.recommended_angle;
   children.push(createLabeledParagraph("Lead With", angle.primary_service_to_lead_with));
   
   children.push(new Paragraph({
@@ -251,13 +251,13 @@ export async function exportBriefingToWord(
     children: [new TextRun({ text: "For Recruiter Conversations:", bold: true })],
     spacing: { before: 200, after: 80 },
   }));
-  hooks.for_recruiter.forEach(hook => children.push(createBulletPoint(hook)));
+  hooks.for_first_touch.forEach(hook => children.push(createBulletPoint(hook)));
 
   children.push(new Paragraph({
     children: [new TextRun({ text: "For Sales Conversations:", bold: true })],
     spacing: { before: 150, after: 80 },
   }));
-  hooks.for_sales.forEach(hook => children.push(createBulletPoint(hook)));
+  hooks.for_live_conversation.forEach(hook => children.push(createBulletPoint(hook)));
 
   children.push(new Paragraph({
     children: [new TextRun({ text: "Red Flags to Listen For:", bold: true, color: "CC0000" })],
@@ -294,10 +294,10 @@ export async function exportBriefingToWord(
   }
 
   // New Rep FAQ
-  if (briefing.new_rep_faq && briefing.new_rep_faq.length > 0) {
+  if (briefing.if_they_ask && briefing.if_they_ask.length > 0) {
     children.push(createHeading("❓ Quick Reference FAQ", HeadingLevel.HEADING_1));
     
-    briefing.new_rep_faq.forEach(faq => {
+    briefing.if_they_ask.forEach(faq => {
       children.push(new Paragraph({
         children: [new TextRun({ text: `Q: ${faq.question}`, bold: true })],
         spacing: { before: 150, after: 80 },

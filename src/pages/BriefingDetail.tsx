@@ -200,9 +200,9 @@ Location: ${b.company_snapshot.hq_or_region}
 Products/Services: ${b.website_signals.products_services.join(", ")}
 
 Key Hiring Gaps:
-${b.likely_hiring_and_gaps.map(r => `- ${r.role_title}: ${r.why_it_matters}`).join("\n")}
+${b.identified_gaps.map(r => `- ${r.role_title}: ${r.why_it_matters}`).join("\n")}
 
-Lead With: ${b.recommended_inceed_angle.primary_service_to_lead_with}
+Lead With: ${b.recommended_angle.primary_service_to_lead_with}
 
 Sample Opener: "${b.conversation_hooks.sample_opener_script}"
 
