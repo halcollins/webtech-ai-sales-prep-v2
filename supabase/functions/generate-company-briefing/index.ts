@@ -967,12 +967,12 @@ For the "If They Ask" section:
         known_pain,
         region,
         notes,
-        website_sources: websiteData.pages,
-        company_context: {
+        website_sources: stripNullBytes(websiteData.pages),
+        company_context: stripNullBytes({
           input_context: contextParts.slice(0, 10),
           lead_source,
           initial_interest,
-        },
+        }),
         company_briefing: companyBriefing,
         company_briefing_md: briefingMd,
         status: "ready",
