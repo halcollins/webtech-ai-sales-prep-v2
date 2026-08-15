@@ -415,41 +415,78 @@ async function fetchWebsiteContent(
         }
       }
 
-      // Try to find and fetch Careers page
-      const careersMatch = html.match(/href=["']([^"']*(?:careers|jobs|hiring|join)[^"']*)["']/i);
-      if (careersMatch) {
+      // Try to find and fetch Services page
+      const servicesMatch = html.match(/href=["']([^"']*(?:services|solutions|what-we-do|products)[^"']*)["']/i);
+      if (servicesMatch) {
         try {
-          const careersUrl = new URL(careersMatch[1], url).href;
+          const servicesUrl = new URL(servicesMatch[1], url).href;
 
           // Validate discovered URL too
-          if (isAllowedUrl(careersUrl)) {
-            const careersController = new AbortController();
-            const careersTimeoutId = setTimeout(() => careersController.abort(), 10000);
+          if (isAllowedUrl(servicesUrl)) {
+            const servicesController = new AbortController();
+            const servicesTimeoutId = setTimeout(() => servicesController.abort(), 10000);
 
-            const careersResponse = await fetch(careersUrl, {
+            const servicesResponse = await fetch(servicesUrl, {
               headers: { "User-Agent": userAgent },
-              signal: careersController.signal,
+              signal: servicesController.signal,
             });
 
-            clearTimeout(careersTimeoutId);
+            clearTimeout(servicesTimeoutId);
 
-            if (careersResponse.ok) {
-              const careersHtml = await careersResponse.text();
-              const careersText = careersHtml
+            if (servicesResponse.ok) {
+              const servicesHtml = await servicesResponse.text();
+              const servicesText = servicesHtml
                 .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
                 .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
                 .replace(/<[^>]+>/g, " ")
                 .replace(/\s+/g, " ")
                 .trim()
                 .slice(0, 10000);
-              combinedContent += `CAREERS PAGE:\n${careersText}\n\n`;
-              pages.push({ url: careersUrl, type: "careers", fetch_status: "ok" });
+              combinedContent += `SERVICES PAGE:\n${servicesText}\n\n`;
+              pages.push({ url: servicesUrl, type: "services", fetch_status: "ok" });
             }
           }
         } catch (e) {
-          console.log("Failed to fetch careers page:", e);
+          console.log("Failed to fetch services page:", e);
         }
       }
+
+      // Try to find and fetch News/Blog page
+      const newsMatch = html.match(/href=["']([^"']*(?:blog|news|insights|resources|case-stud)[^"']*)["']/i);
+      if (newsMatch) {
+        try {
+          const newsUrl = new URL(newsMatch[1], url).href;
+
+          // Validate discovered URL too
+          if (isAllowedUrl(newsUrl)) {
+            const newsController = new AbortController();
+            const newsTimeoutId = setTimeout(() => newsController.abort(), 10000);
+
+            const newsResponse = await fetch(newsUrl, {
+              headers: { "User-Agent": userAgent },
+              signal: newsController.signal,
+            });
+
+            clearTimeout(newsTimeoutId);
+
+            if (newsResponse.ok) {
+              const newsHtml = await newsResponse.text();
+              const newsText = newsHtml
+                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+                .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+                .replace(/<[^>]+>/g, " ")
+                .replace(/\s+/g, " ")
+                .trim()
+                .slice(0, 10000);
+              combinedContent += `NEWS PAGE:\n${newsText}\n\n`;
+              pages.push({ url: newsUrl, type: "news", fetch_status: "ok" });
+            }
+          }
+        } catch (e) {
+          console.log("Failed to fetch news page:", e);
+        }
+      }
+
 
       // Try to find and fetch Team/Leadership page
       const teamMatch = html.match(
