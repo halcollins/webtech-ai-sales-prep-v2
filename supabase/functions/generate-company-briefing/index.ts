@@ -331,9 +331,13 @@ const COMPANY_BRIEFING_SCHEMA = {
   ],
 };
 
-async function fetchWebsiteContent(url: string): Promise<{ content: string; pages: any[]; success: boolean }> {
+async function fetchWebsiteContent(
+  url: string,
+  botUserAgent: string,
+): Promise<{ content: string; pages: any[]; success: boolean }> {
   const pages: any[] = [];
   let combinedContent = "";
+  const userAgent = `Mozilla/5.0 (compatible; ${botUserAgent})`;
 
   // Validate URL before fetching
   if (!isAllowedUrl(url)) {
