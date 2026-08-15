@@ -64,18 +64,17 @@ export const companyBriefingSchema = z.object({
     pages_reviewed: z.array(
       z.object({
         url: z.string(),
-        type: z.enum(["homepage", "about", "careers", "contact", "other"]),
+        type: z.enum(["homepage", "about", "services", "news", "careers", "contact", "team", "other"]),
         fetch_status: z.enum(["ok", "failed"]),
       })
     ),
     products_services: z.array(z.string()),
     positioning_keywords: z.array(z.string()),
     tech_stack_hints: z.array(z.string()),
-    hiring_signals: z.object({
-      careers_page_found: z.boolean(),
-      role_families_seen: z.array(z.string()),
-      seniority_mix: z.string(),
-      remote_hybrid_signals: z.array(z.string()),
+    opportunity_signals: z.object({
+      signals_matched: z.array(z.string()),
+      content_freshness: z.string(),
+      notable_absences: z.array(z.string()),
     }),
   }).optional(),
   // AI & Technology Investments (from Perplexity research)
