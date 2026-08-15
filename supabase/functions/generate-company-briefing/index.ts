@@ -250,8 +250,8 @@ const COMPANY_BRIEFING_SCHEMA = {
         required: ["objection", "why_they_say_this", "suggested_response"],
       },
     },
-    // NEW: New Rep FAQ
-    new_rep_faq: {
+    // NEW: If They Ask
+    if_they_ask: {
       type: "array",
       items: {
         type: "object",
@@ -262,44 +262,44 @@ const COMPANY_BRIEFING_SCHEMA = {
         required: ["question", "answer_framework"],
       },
     },
-    likely_hiring_and_gaps: {
+    identified_gaps: {
       type: "array",
       items: {
         type: "object",
         properties: {
-          role_title: { type: "string" },
+          gap_title: { type: "string" },
           why_it_matters: { type: "string" },
-          difficulty_to_fill_stars: { type: "number", minimum: 1, maximum: 5 },
-          contract_vs_fte_likelihood: { type: "string" },
-          common_skills: { type: "array", items: { type: "string" } },
+          urgency_stars: { type: "number", minimum: 1, maximum: 5 },
+          addressed_by_offering: { type: "string" },
+          supporting_evidence: { type: "array", items: { type: "string" } },
         },
         required: [
-          "role_title",
+          "gap_title",
           "why_it_matters",
-          "difficulty_to_fill_stars",
-          "contract_vs_fte_likelihood",
-          "common_skills",
+          "urgency_stars",
+          "addressed_by_offering",
+          "supporting_evidence",
         ],
       },
     },
     conversation_hooks: {
       type: "object",
       properties: {
-        for_recruiter: { type: "array", items: { type: "string" } },
-        for_sales: { type: "array", items: { type: "string" } },
+        for_first_touch: { type: "array", items: { type: "string" } },
+        for_live_conversation: { type: "array", items: { type: "string" } },
         sample_opener_script: { type: "string" },
         discovery_questions: { type: "array", items: { type: "string" } },
         red_flags_to_listen_for: { type: "array", items: { type: "string" } },
       },
       required: [
-        "for_recruiter",
-        "for_sales",
+        "for_first_touch",
+        "for_live_conversation",
         "sample_opener_script",
         "discovery_questions",
         "red_flags_to_listen_for",
       ],
     },
-    recommended_inceed_angle: {
+    recommended_angle: {
       type: "object",
       properties: {
         primary_service_to_lead_with: { type: "string" },
