@@ -62,6 +62,13 @@ export default function BriefingDetail() {
     async function fetchBriefing() {
       if (!id || !user || adminLoading) return;
 
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      if (!isUuid) {
+        setBriefing(null);
+        setLoading(false);
+        return;
+      }
+
       let briefingQuery = supabase
         .from("briefings")
         .select("*")
@@ -71,18 +78,15 @@ export default function BriefingDetail() {
         briefingQuery = briefingQuery.eq("user_id", user.id);
       }
 
-      const { data: briefingData, error: briefingError } = await briefingQuery.single();
+      const { data: briefingData, error: briefingError } = await briefingQuery.maybeSingle();
 
-      if (briefingError) {
+      if (briefingError || !briefingData) {
         console.error("Error fetching briefing:", briefingError);
-        toast({
-          title: "Error",
-          description: "Failed to load briefing",
-          variant: "destructive",
-        });
-        navigate("/");
+        setBriefing(null);
+        setLoading(false);
         return;
       }
+
 
       // Type cast the company_briefing from Json to CompanyBriefing
       const typedBriefing: Briefing = {
