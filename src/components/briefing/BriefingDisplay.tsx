@@ -291,16 +291,16 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           </Card>
         )}
 
-        {/* NEW: Why They Need Staffing */}
+        {/* NEW: Why They Need You */}
         {briefing.why_they_need_you && (
           <Card className="border-border/50 bg-card/50">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Why Staffing Makes Sense Here</CardTitle>
+                  <CardTitle className="text-lg">Why They Need Us</CardTitle>
                 </div>
-                <CopyButton text={JSON.stringify(briefing.why_they_need_you, null, 2)} label="Staffing rationale" />
+                <CopyButton text={JSON.stringify(briefing.why_they_need_you, null, 2)} label="Rationale" />
               </div>
               <CardDescription>Understanding the business need</CardDescription>
             </CardHeader>
@@ -316,7 +316,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               </div>
 
               <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
-                <p className="text-xs text-primary mb-1 font-medium">How Inceed Helps</p>
+                <p className="text-xs text-primary mb-1 font-medium">How We Help</p>
                 <p className="text-sm">{briefing.why_they_need_you.value_connection}</p>
               </div>
             </CardContent>
@@ -497,15 +497,15 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           </CardContent>
         </Card>
 
-        {/* Inceed Angle */}
+        {/* Recommended Angle */}
         <Card className="border-border/50 bg-card/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Lightbulb className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg">Recommended Inceed Angle</CardTitle>
+                <CardTitle className="text-lg">Recommended Angle</CardTitle>
               </div>
-              <CopyButton text={JSON.stringify(briefing.recommended_angle, null, 2)} label="Inceed angle" />
+              <CopyButton text={JSON.stringify(briefing.recommended_angle, null, 2)} label="Recommended angle" />
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
