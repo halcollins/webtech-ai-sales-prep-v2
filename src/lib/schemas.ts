@@ -14,13 +14,7 @@ export const leadSources = [
 export const companyFormSchema = z.object({
   company_name: z.string().min(1, "Company name is required"),
   company_url: z.string().url("Please enter a valid URL"),
-  target_contact_type: z.enum([
-    "CIO/CTO",
-    "VP IT",
-    "Finance Leadership",
-    "HR/Talent",
-    "Executive Leadership",
-  ]),
+  target_contact_type: z.string().min(1, "Select a target contact type"),
   lead_source: z.enum([
     "Job board posting",
     "LinkedIn search",

@@ -42,7 +42,7 @@ Step 1. Company Briefing
 Inputs (required):
 - company_name (text)
 - company_url (url)
-- target_contact_type (select: CIO/CTO, VP IT, Finance Leadership, HR/Talent, Executive Leadership)
+- target_contact_type (select: options come from the company profile's buyer_roles)
 Inputs (optional):
 - industry (select with “Other” + free text)
 - meeting_type (select: Intro call, Discovery, Follow-up)

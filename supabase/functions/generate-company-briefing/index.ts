@@ -21,7 +21,7 @@ const companyInputSchema = z.object({
         return false;
       }
     }, "Only HTTP(S) URLs allowed"),
-  target_contact_type: z.enum(["CIO/CTO", "VP IT", "Finance Leadership", "HR/Talent", "Executive Leadership"]),
+  target_contact_type: z.string().min(1),
   lead_source: z
     .enum(["Job board posting", "LinkedIn search", "Referral", "News/article", "Industry list", "Other"])
     .optional()
