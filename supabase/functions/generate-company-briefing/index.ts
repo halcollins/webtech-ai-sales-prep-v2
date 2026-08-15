@@ -807,51 +807,79 @@ serve(async (req) => {
       );
     }
 
-    const systemPrompt = `You are helping a BRAND NEW sales rep at Inceed (an IT and Accounting/Finance staffing firm based in Tulsa, OK) prepare for their first client calls. They are still learning:
-- How to identify good target companies
-- Why companies use staffing firms
-- How to handle common objections
-- What to say when asked basic questions about Inceed
+    const sellerName = profile.company_name;
+    const experience = profile.rep_experience_level;
+    const experienceGuidance =
+      experience === "new"
+        ? `The rep is BRAND NEW. Your output should EDUCATE and BUILD CONFIDENCE, explaining the "why" behind every recommendation in plain language.`
+        : experience === "experienced"
+          ? `The rep is EXPERIENCED. Be concise and skip basic explanations; focus on sharp, specific insight.`
+          : `The rep has moderate experience. Balance explanation with efficiency.`;
 
-Your output should EDUCATE and BUILD CONFIDENCE, not just provide data.
+    const systemPrompt = `You are helping a sales rep at ${sellerName} prepare for a client conversation.
+
+ABOUT THE SELLER (${sellerName}):
+- Website: ${profile.website ?? "(not provided)"}
+- Who they serve: ${profile.who_we_serve ?? "(not specified)"}
+- Price range: ${profile.price_range ?? "(not specified)"}
+
+WHAT ${sellerName.toUpperCase()} SELLS:
+${formatList(profile.what_we_sell)}
+
+PROOF POINTS:
+${formatList(profile.proof_points)}
+
+BUYING/TRIGGER SIGNALS TO LOOK FOR:
+${formatList(profile.trigger_signals)}
+
+DISQUALIFIERS (signs this is a poor fit):
+${formatList(profile.disqualifiers)}
+
+KNOWN COMPETITORS:
+${formatList(profile.competitors)}
+
+KNOWN OBJECTIONS TO ANTICIPATE:
+${formatList(profile.known_objections)}
+
+STANDARD FAQs THE REP MUST BE ABLE TO ANSWER:
+${formatList(profile.standard_faqs)}
+
+WORDS AND PHRASES YOU MUST NEVER USE:
+${formatList(profile.banned_words)}
+
+REP EXPERIENCE LEVEL: ${experience}
+${experienceGuidance}
 
 IMPORTANT RULES:
 1. If data is missing, state assumptions clearly and label them as "likely" or "assumed"
-2. Generate exactly 5 likely hiring gaps if possible
+2. Generate exactly 5 identified gaps if possible
 3. Be specific and actionable in your recommendations
-4. Difficulty ratings (1-5 stars) should reflect market reality
+4. Urgency ratings (1-5 stars) should reflect market reality
 5. The sample opener script should be natural and conversational
 6. Focus on insights that are immediately useful for a call
 7. If a TEAM PAGE section is provided, use any named leadership or department heads shown there to sharpen your recommended angle and conversation hooks. Only reference people explicitly listed on the page. Never guess names.
+8. Only recommend offerings that appear in WHAT ${sellerName.toUpperCase()} SELLS.
 
 For the Qualification Assessment:
 - Be honest if this doesn't look like a strong fit
-- Explain your reasoning so they learn what to look for
-- Consider: Are they hiring in roles Inceed fills? Do they show signs of using contractors? Are they growing or in transition?
-- Scores: "Strong fit" (clearly needs staffing in IT/Finance), "Possible fit" (some signals), "Needs validation" (unclear), "Likely not a fit" (poor signals)
+- Explain your reasoning so the rep learns what to look for
+- Weigh the trigger signals and disqualifiers listed above
+- Scores: "Strong fit", "Possible fit", "Needs validation", "Likely not a fit"
 
-For "Why They'd Need Inceed":
-- Explain the business pain in simple terms a new rep can understand
-- Connect it to what Inceed actually does
-- Help them understand WHY staffing solves problems, not just THAT it does
+For "Why They Need You":
+- Explain the business pain in simple, concrete terms
+- Connect it to what ${sellerName} actually sells
+- Help the rep understand WHY the offering solves the problem, not just THAT it does
 
 For Objection Handling:
-- Anticipate 2-4 likely objections based on company size, industry, and signals
-- Common objections include: "We use an MSP/preferred vendor", "We only hire full-time", "We handle recruiting internally", "We're not hiring right now", "We've had bad experiences with staffing firms"
+- Anticipate 2-4 likely objections, drawing first on the KNOWN OBJECTIONS above and then on company size, industry, and signals
 - Explain WHY the client might say this (builds empathy)
 - Provide conversational response frameworks, not scripts
 
-For the FAQ section:
-- Always include these standard Inceed questions:
-  * "What does Inceed charge?"
-  * "What's your process/timeline?"
-  * "What makes Inceed different?"
-  * "What roles do you fill?"
+For the "If They Ask" section:
+- Always cover the STANDARD FAQs listed above
 - Plus 1-2 company-specific questions based on their industry or situation
-- Provide simple, confident answer frameworks
-- Keep it conversational, not corporate
-
-Inceed offers: IT staffing, Accounting/Finance staffing, direct hire placement, contract-to-hire, executive search, and workforce consulting.`;
+- Provide simple, confident answer frameworks; keep it conversational, not corporate`;
 
     const userPrompt = `Generate a company briefing for the following context:\n\n${contextParts.join("\n")}`;
 
