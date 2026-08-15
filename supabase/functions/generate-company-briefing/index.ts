@@ -204,18 +204,17 @@ const COMPANY_BRIEFING_SCHEMA = {
         products_services: { type: "array", items: { type: "string" } },
         positioning_keywords: { type: "array", items: { type: "string" } },
         tech_stack_hints: { type: "array", items: { type: "string" } },
-        hiring_signals: {
+        opportunity_signals: {
           type: "object",
           properties: {
-            careers_page_found: { type: "boolean" },
-            role_families_seen: { type: "array", items: { type: "string" } },
-            seniority_mix: { type: "string" },
-            remote_hybrid_signals: { type: "array", items: { type: "string" } },
+            signals_matched: { type: "array", items: { type: "string" } },
+            content_freshness: { type: "string" },
+            notable_absences: { type: "array", items: { type: "string" } },
           },
-          required: ["careers_page_found", "role_families_seen", "seniority_mix", "remote_hybrid_signals"],
+          required: ["signals_matched", "content_freshness", "notable_absences"],
         },
       },
-      required: ["pages_reviewed", "products_services", "positioning_keywords", "tech_stack_hints", "hiring_signals"],
+      required: ["pages_reviewed", "products_services", "positioning_keywords", "tech_stack_hints", "opportunity_signals"],
     },
     // NEW: Qualification Assessment
     qualification_assessment: {
