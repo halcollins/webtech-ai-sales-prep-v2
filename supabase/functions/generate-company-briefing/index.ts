@@ -944,16 +944,16 @@ For the "If They Ask" section:
       throw new Error("Invalid AI response structure");
     }
 
-    const companyBriefing = JSON.parse(toolCall.function.arguments);
+    const companyBriefing = stripNullBytes(JSON.parse(toolCall.function.arguments));
 
     // Update pages reviewed with actual fetch results
-    companyBriefing.website_signals.pages_reviewed = websiteData.pages;
+    companyBriefing.website_signals.pages_reviewed = stripNullBytes(websiteData.pages);
 
     // Generate markdown
-    const briefingMd = generateMarkdown(companyBriefing);
+    const briefingMd = stripNullBytes(generateMarkdown(companyBriefing));
 
     // Use service role key for database operations
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = serviceClient;
 
     const { data: briefingData, error: dbError } = await supabase
       .from("briefings")
