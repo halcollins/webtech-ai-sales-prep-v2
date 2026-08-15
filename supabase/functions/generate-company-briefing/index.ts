@@ -682,7 +682,7 @@ function formatList(items: unknown): string {
   return items.map((i) => `- ${typeof i === "string" ? i : JSON.stringify(i)}`).join("\n");
 }
 
-
+serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
