@@ -628,11 +628,11 @@ ${briefing.identified_gaps
 ### Sample Opener
 > "${briefing.conversation_hooks.sample_opener_script}"
 
-### For Recruiter
-${briefing.conversation_hooks.for_recruiter.map((h: string) => `- ${h}`).join("\n")}
+### First Touch
+${briefing.conversation_hooks.for_first_touch.map((h: string) => `- ${h}`).join("\n")}
 
-### For Sales
-${briefing.conversation_hooks.for_sales.map((h: string) => `- ${h}`).join("\n")}
+### Live Conversation
+${briefing.conversation_hooks.for_live_conversation.map((h: string) => `- ${h}`).join("\n")}
 
 ### Discovery Questions
 ${briefing.conversation_hooks.discovery_questions.map((q: string, i: number) => `${i + 1}. ${q}`).join("\n")}
@@ -640,15 +640,15 @@ ${briefing.conversation_hooks.discovery_questions.map((q: string, i: number) => 
 ### Red Flags to Listen For
 ${briefing.conversation_hooks.red_flags_to_listen_for.map((f: string) => `⚠️ ${f}`).join("\n")}
 
-## Recommended Inceed Angle
+## Recommended Angle
 
-**Lead With:** ${briefing.recommended_inceed_angle.primary_service_to_lead_with}
+**Lead With:** ${briefing.recommended_angle.primary_service_to_lead_with}
 
 ### Why This Fits
-${briefing.recommended_inceed_angle.why_this_fits.map((r: string) => `✓ ${r}`).join("\n")}
+${briefing.recommended_angle.why_this_fits.map((r: string) => `✓ ${r}`).join("\n")}
 
 ### What Not to Pitch First
-${briefing.recommended_inceed_angle.what_not_to_pitch_first.map((x: string) => `✗ ${x}`).join("\n")}
+${briefing.recommended_angle.what_not_to_pitch_first.map((x: string) => `✗ ${x}`).join("\n")}
 
 ## Confidence: ${briefing.assumptions_and_confidence.confidence_score_0_100}%
 
