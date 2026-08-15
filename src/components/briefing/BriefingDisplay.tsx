@@ -93,32 +93,32 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-lg font-medium">{briefing.company_snapshot.one_liner}</p>
+            <p className="text-lg font-medium">{briefing.company_snapshot?.one_liner}</p>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Industry</p>
-                <p className="text-sm">{briefing.company_snapshot.industry}</p>
+                <p className="text-sm">{briefing.company_snapshot?.industry}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Size</p>
-                <p className="text-sm">{briefing.company_snapshot.estimated_size}</p>
+                <p className="text-sm">{briefing.company_snapshot?.estimated_size}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Location</p>
-                <p className="text-sm">{briefing.company_snapshot.hq_or_region}</p>
+                <p className="text-sm">{briefing.company_snapshot?.hq_or_region}</p>
               </div>
               <div className="md:col-span-2 lg:col-span-3">
                 <p className="text-xs text-muted-foreground mb-1">What They Sell</p>
-                <p className="text-sm">{briefing.company_snapshot.what_they_sell}</p>
+                <p className="text-sm">{briefing.company_snapshot?.what_they_sell}</p>
               </div>
               <div className="md:col-span-2 lg:col-span-3">
                 <p className="text-xs text-muted-foreground mb-1">Target Customers</p>
-                <p className="text-sm">{briefing.company_snapshot.who_they_sell_to}</p>
+                <p className="text-sm">{briefing.company_snapshot?.who_they_sell_to}</p>
               </div>
             </div>
 
-            {briefing.company_snapshot.notable_signals.length > 0 && (
+            {(briefing.company_snapshot?.notable_signals ?? []).length > 0 && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Notable Signals</p>
                 <div className="flex flex-wrap gap-2">
@@ -147,7 +147,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <CardDescription>Technology strategy and investments</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {briefing.ai_technology_investments.major_investments && briefing.ai_technology_investments.major_investments.length > 0 && (
+              {briefing.ai_technology_investments?.major_investments && (briefing.ai_technology_investments?.major_investments ?? []).length > 0 && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Major Investments</p>
                   <div className="space-y-2">
@@ -165,7 +165,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </div>
               )}
 
-              {briefing.ai_technology_investments.internal_capabilities && briefing.ai_technology_investments.internal_capabilities.length > 0 && (
+              {briefing.ai_technology_investments?.internal_capabilities && (briefing.ai_technology_investments?.internal_capabilities ?? []).length > 0 && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Internal Capabilities</p>
                   <ul className="space-y-1.5">
@@ -179,21 +179,21 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </div>
               )}
 
-              {briefing.ai_technology_investments.strategic_positioning && (
+              {briefing.ai_technology_investments?.strategic_positioning && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-1 font-medium">Strategic Positioning</p>
-                  <p className="text-sm">{briefing.ai_technology_investments.strategic_positioning}</p>
+                  <p className="text-sm">{briefing.ai_technology_investments?.strategic_positioning}</p>
                 </div>
               )}
 
-              {briefing.ai_technology_investments.why_it_matters && (
+              {briefing.ai_technology_investments?.why_it_matters && (
                 <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
                   <p className="text-xs text-primary mb-1 font-medium">Why It Matters</p>
-                  <p className="text-sm">{briefing.ai_technology_investments.why_it_matters}</p>
+                  <p className="text-sm">{briefing.ai_technology_investments?.why_it_matters}</p>
                 </div>
               )}
 
-              {!briefing.ai_technology_investments.research_available && (
+              {!briefing.ai_technology_investments?.research_available && (
                 <p className="text-xs text-muted-foreground italic">Limited research available. Information is based on available public data.</p>
               )}
             </CardContent>
@@ -214,7 +214,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <CardDescription>News that affects the conversation</CardDescription>
             </CardHeader>
             <CardContent>
-              {briefing.recent_news.items && briefing.recent_news.items.length > 0 ? (
+              {briefing.recent_news?.items && (briefing.recent_news?.items ?? []).length > 0 ? (
                 <div className="space-y-3">
                   {(briefing?.recent_news?.items ?? []).map((item, i) => (
                     <div key={i} className="rounded-lg bg-secondary/30 p-3">
@@ -230,7 +230,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <p className="text-sm text-muted-foreground">No recent significant news found.</p>
               )}
 
-              {!briefing.recent_news.research_available && (
+              {!briefing.recent_news?.research_available && (
                 <p className="text-xs text-muted-foreground italic mt-3">Limited research available. Information is based on available public data.</p>
               )}
             </CardContent>
@@ -251,11 +251,11 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <CardDescription>Worth pursuing?</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Badge className={`text-sm px-3 py-1 border ${getQualificationBadgeColor(briefing.qualification_assessment.score)}`}>
-                {briefing.qualification_assessment.score}
+              <Badge className={`text-sm px-3 py-1 border ${getQualificationBadgeColor(briefing.qualification_assessment?.score)}`}>
+                {briefing.qualification_assessment?.score}
               </Badge>
 
-              {briefing.qualification_assessment.positive_signals.length > 0 && (
+              {(briefing.qualification_assessment?.positive_signals ?? []).length > 0 && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Positive Signals</p>
                   <ul className="space-y-1.5">
@@ -269,7 +269,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </div>
               )}
 
-              {briefing.qualification_assessment.concerns.length > 0 && (
+              {(briefing.qualification_assessment?.concerns ?? []).length > 0 && (
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Concerns</p>
                   <ul className="space-y-1.5">
@@ -285,7 +285,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
 
               <div className="rounded-lg bg-secondary/30 p-4">
                 <p className="text-xs text-muted-foreground mb-1 font-medium">Recommendation</p>
-                <p className="text-sm">{briefing.qualification_assessment.recommendation}</p>
+                <p className="text-sm">{briefing.qualification_assessment?.recommendation}</p>
               </div>
             </CardContent>
           </Card>
@@ -307,17 +307,17 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <CardContent className="space-y-4">
               <div>
                 <p className="text-xs text-muted-foreground mb-1 font-medium">The Pain Point</p>
-                <p className="text-sm">{briefing.why_they_need_you.pain_point_explanation}</p>
+                <p className="text-sm">{briefing.why_they_need_you?.pain_point_explanation}</p>
               </div>
 
               <div>
                 <p className="text-xs text-muted-foreground mb-1 font-medium">Business Context</p>
-                <p className="text-sm">{briefing.why_they_need_you.business_context}</p>
+                <p className="text-sm">{briefing.why_they_need_you?.business_context}</p>
               </div>
 
               <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
                 <p className="text-xs text-primary mb-1 font-medium">How We Help</p>
-                <p className="text-sm">{briefing.why_they_need_you.value_connection}</p>
+                <p className="text-sm">{briefing.why_they_need_you?.value_connection}</p>
               </div>
             </CardContent>
           </Card>
@@ -441,7 +441,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           <CardContent className="space-y-4">
             <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
               <p className="text-xs text-primary mb-2 font-medium">Sample Opener</p>
-              <p className="text-sm italic">"{briefing.conversation_hooks.sample_opener_script}"</p>
+              <p className="text-sm italic">"{briefing.conversation_hooks?.sample_opener_script}"</p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -481,7 +481,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               </ul>
             </div>
 
-            {briefing.conversation_hooks.red_flags_to_listen_for.length > 0 && (
+            {(briefing.conversation_hooks?.red_flags_to_listen_for ?? []).length > 0 && (
               <div>
                 <p className="text-xs text-destructive mb-2 font-medium">Red Flags to Listen For</p>
                 <ul className="space-y-1.5">
@@ -511,7 +511,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           <CardContent className="space-y-4">
             <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
               <p className="text-xs text-primary mb-1 font-medium">Lead With</p>
-              <p className="text-lg font-medium">{briefing.recommended_angle.primary_service_to_lead_with}</p>
+              <p className="text-lg font-medium">{briefing.recommended_angle?.primary_service_to_lead_with}</p>
             </div>
 
             <div>
@@ -526,7 +526,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               </ul>
             </div>
 
-            {briefing.recommended_angle.what_not_to_pitch_first.length > 0 && (
+            {(briefing.recommended_angle?.what_not_to_pitch_first ?? []).length > 0 && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Avoid Leading With</p>
                 <ul className="space-y-1.5">
@@ -549,16 +549,16 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-lg font-medium">Confidence Score</p>
                 <p className="text-xs text-muted-foreground">
-                  {briefing.assumptions_and_confidence.assumptions.length} assumptions made
+                  {(briefing.assumptions_and_confidence?.assumptions ?? []).length} assumptions made
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-primary">
-                  {briefing.assumptions_and_confidence.confidence_score_0_100}%
+                  {briefing.assumptions_and_confidence?.confidence_score_0_100 ?? 0}%
                 </p>
               </div>
             </div>
-            {briefing.assumptions_and_confidence.assumptions.length > 0 && (
+            {(briefing.assumptions_and_confidence?.assumptions ?? []).length > 0 && (
               <div className="mt-3 pt-3 border-t border-border/50">
                 <p className="text-base text-muted-foreground mb-2">Assumptions</p>
                 <ul className="space-y-1">
