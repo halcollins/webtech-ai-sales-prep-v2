@@ -586,7 +586,7 @@ ${briefing.common_objections
   .join("")}
 
 ## If They Ask...
-${briefing.new_rep_faq
+${briefing.if_they_ask
   .map(
     (faq: any) => `
 **${faq.question}**
