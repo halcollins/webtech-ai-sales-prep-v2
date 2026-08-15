@@ -112,18 +112,27 @@ export function CompanyForm({ onSubmit, isLoading, defaultValues }: CompanyFormP
               Target Contact Type <span className="text-destructive">*</span>
             </Label>
             <Select
-              defaultValue={defaultValues?.target_contact_type || "CIO/CTO"}
-              onValueChange={(value) => setValue("target_contact_type", value as any)}
+              value={watchedContactType || ""}
+              disabled={rolesLoading || buyerRoles.length === 0}
+              onValueChange={(value) => setValue("target_contact_type", value)}
             >
               <SelectTrigger className="bg-secondary/50">
-                <SelectValue placeholder="Select contact type" />
+                <SelectValue
+                  placeholder={
+                    rolesLoading
+                      ? "Loading roles..."
+                      : buyerRoles.length === 0
+                        ? "No buyer roles configured. Contact your admin."
+                        : "Select contact type"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CIO/CTO">CIO/CTO</SelectItem>
-                <SelectItem value="VP IT">VP IT</SelectItem>
-                <SelectItem value="Finance Leadership">Finance Leadership</SelectItem>
-                <SelectItem value="HR/Talent">HR/Talent</SelectItem>
-                <SelectItem value="Executive Leadership">Executive Leadership</SelectItem>
+                {buyerRoles.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.target_contact_type && (
