@@ -758,8 +758,30 @@ serve(async (req) => {
 
     console.log(`Generating briefing for ${company_name} (${company_url}) by user ${user_id}`);
 
+    // Load the single seller profile (service role bypasses RLS)
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
+    const { data: profile, error: profileError } = await serviceClient
+      .from("company_profile")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Failed to load company profile:", profileError);
+      throw new Error("Failed to load company profile");
+    }
+
+    if (!profile) {
+      return new Response(
+        JSON.stringify({
+          error: "No company profile configured. An admin must set one up before briefings can be generated.",
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     // Fetch website content
-    const websiteData = await fetchWebsiteContent(company_url);
+    const websiteData = await fetchWebsiteContent(company_url, profile.bot_user_agent);
     console.log(`Fetched ${websiteData.pages.length} pages, success: ${websiteData.success}`);
 
     // Build context for LLM
