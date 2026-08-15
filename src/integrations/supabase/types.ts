@@ -129,6 +129,7 @@ export type Database = {
           ai_model: string
           banned_words: Json
           bot_user_agent: string
+          buyer_roles: Json
           company_name: string
           competitors: Json
           disqualifiers: Json
@@ -150,6 +151,7 @@ export type Database = {
           ai_model?: string
           banned_words?: Json
           bot_user_agent?: string
+          buyer_roles?: Json
           company_name: string
           competitors?: Json
           disqualifiers?: Json
@@ -171,6 +173,7 @@ export type Database = {
           ai_model?: string
           banned_words?: Json
           bot_user_agent?: string
+          buyer_roles?: Json
           company_name?: string
           competitors?: Json
           disqualifiers?: Json
