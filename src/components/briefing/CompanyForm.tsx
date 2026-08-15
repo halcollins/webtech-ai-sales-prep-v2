@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { companyFormSchema, CompanyFormData, industries, regions, leadSources } from "@/lib/schemas";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +29,7 @@ export function CompanyForm({ onSubmit, isLoading, defaultValues }: CompanyFormP
     defaultValues: {
       company_name: defaultValues?.company_name || "",
       company_url: defaultValues?.company_url || "",
-      target_contact_type: defaultValues?.target_contact_type || "CIO/CTO",
+      target_contact_type: defaultValues?.target_contact_type || "",
       lead_source: defaultValues?.lead_source,
       initial_interest: defaultValues?.initial_interest || "",
       industry: defaultValues?.industry || "",
@@ -38,8 +40,32 @@ export function CompanyForm({ onSubmit, isLoading, defaultValues }: CompanyFormP
     },
   });
 
+  const [buyerRoles, setBuyerRoles] = useState<string[]>([]);
+  const [rolesLoading, setRolesLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data } = await supabase.from("company_profile").select("buyer_roles").limit(1).maybeSingle();
+      if (!active) return;
+      const roles = Array.isArray(data?.buyer_roles)
+        ? (data!.buyer_roles as unknown[]).filter((r): r is string => typeof r === "string" && r.length > 0)
+        : [];
+      setBuyerRoles(roles);
+      setRolesLoading(false);
+      if (!defaultValues?.target_contact_type && roles.length > 0) {
+        setValue("target_contact_type", roles[0]);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const watchedIndustry = watch("industry");
   const watchedLeadSource = watch("lead_source");
+  const watchedContactType = watch("target_contact_type");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -86,18 +112,27 @@ export function CompanyForm({ onSubmit, isLoading, defaultValues }: CompanyFormP
               Target Contact Type <span className="text-destructive">*</span>
             </Label>
             <Select
-              defaultValue={defaultValues?.target_contact_type || "CIO/CTO"}
-              onValueChange={(value) => setValue("target_contact_type", value as any)}
+              value={watchedContactType || ""}
+              disabled={rolesLoading || buyerRoles.length === 0}
+              onValueChange={(value) => setValue("target_contact_type", value)}
             >
               <SelectTrigger className="bg-secondary/50">
-                <SelectValue placeholder="Select contact type" />
+                <SelectValue
+                  placeholder={
+                    rolesLoading
+                      ? "Loading roles..."
+                      : buyerRoles.length === 0
+                        ? "No buyer roles configured. Contact your admin."
+                        : "Select contact type"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CIO/CTO">CIO/CTO</SelectItem>
-                <SelectItem value="VP IT">VP IT</SelectItem>
-                <SelectItem value="Finance Leadership">Finance Leadership</SelectItem>
-                <SelectItem value="HR/Talent">HR/Talent</SelectItem>
-                <SelectItem value="Executive Leadership">Executive Leadership</SelectItem>
+                {buyerRoles.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {role}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.target_contact_type && (
