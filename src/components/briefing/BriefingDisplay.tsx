@@ -122,7 +122,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Notable Signals</p>
                 <div className="flex flex-wrap gap-2">
-                  {briefing.company_snapshot.notable_signals.map((signal, i) => (
+                  {(briefing?.company_snapshot?.notable_signals ?? []).map((signal, i) => (
                     <Badge key={i} variant="secondary" className="text-xs">
                       {signal}
                     </Badge>
@@ -151,7 +151,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Major Investments</p>
                   <div className="space-y-2">
-                    {briefing.ai_technology_investments.major_investments.map((inv, i) => (
+                    {(briefing?.ai_technology_investments?.major_investments ?? []).map((inv, i) => (
                       <div key={i} className="rounded-lg bg-secondary/30 p-3">
                         <div className="flex justify-between items-start">
                           <p className="text-sm font-medium">{inv.name}</p>
@@ -169,7 +169,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Internal Capabilities</p>
                   <ul className="space-y-1.5">
-                    {briefing.ai_technology_investments.internal_capabilities.map((cap, i) => (
+                    {(briefing?.ai_technology_investments?.internal_capabilities ?? []).map((cap, i) => (
                       <li key={i} className="text-sm flex gap-2">
                         <span className="text-primary">•</span>
                         <span><strong>{cap.name}:</strong> {cap.description}</span>
@@ -216,7 +216,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <CardContent>
               {briefing.recent_news.items && briefing.recent_news.items.length > 0 ? (
                 <div className="space-y-3">
-                  {briefing.recent_news.items.map((item, i) => (
+                  {(briefing?.recent_news?.items ?? []).map((item, i) => (
                     <div key={i} className="rounded-lg bg-secondary/30 p-3">
                       <p className="text-sm font-medium mb-1">{item.news_item}</p>
                       <p className="text-sm text-muted-foreground">
@@ -259,7 +259,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Positive Signals</p>
                   <ul className="space-y-1.5">
-                    {briefing.qualification_assessment.positive_signals.map((signal, i) => (
+                    {(briefing?.qualification_assessment?.positive_signals ?? []).map((signal, i) => (
                       <li key={i} className="text-sm flex gap-2">
                         <CheckCircle className="h-4 w-4 text-success shrink-0 mt-0.5" />
                         {signal}
@@ -273,7 +273,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 font-medium">Concerns</p>
                   <ul className="space-y-1.5">
-                    {briefing.qualification_assessment.concerns.map((concern, i) => (
+                    {(briefing?.qualification_assessment?.concerns ?? []).map((concern, i) => (
                       <li key={i} className="text-sm flex gap-2">
                         <AlertTriangle className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
                         {concern}
@@ -338,7 +338,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
-                {briefing.common_objections.map((obj, i) => (
+                {(briefing?.common_objections ?? []).map((obj, i) => (
                   <AccordionItem key={i} value={`objection-${i}`} className="border-border/50">
                     <AccordionTrigger className="text-sm hover:no-underline">
                       <span className="text-left">{obj.objection}</span>
@@ -375,7 +375,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {briefing.if_they_ask.map((faq, i) => (
+                {(briefing?.if_they_ask ?? []).map((faq, i) => (
                   <div key={i} className="rounded-lg bg-secondary/30 p-4">
                     <p className="text-sm font-medium mb-2">{faq.question}</p>
                     <p className="text-sm text-muted-foreground">{faq.answer_framework}</p>
@@ -399,7 +399,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {briefing.identified_gaps.map((gap, i) => (
+              {(briefing?.identified_gaps ?? []).map((gap, i) => (
                 <div key={i} className="rounded-lg bg-secondary/30 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <h4 className="font-medium">{gap.gap_title}</h4>
@@ -414,7 +414,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                   </div>
                   {gap.supporting_evidence.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
-                      {gap.supporting_evidence.map((evidence, j) => (
+                      {(gap?.supporting_evidence ?? []).map((evidence, j) => (
                         <Badge key={j} variant="outline" className="text-xs">
                           {evidence}
                         </Badge>
@@ -448,7 +448,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">First Touch</p>
                 <ul className="space-y-1.5">
-                  {briefing.conversation_hooks.for_first_touch.map((hook, i) => (
+                  {(briefing?.conversation_hooks?.for_first_touch ?? []).map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">•</span>
                       {hook}
@@ -459,7 +459,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Live Conversation</p>
                 <ul className="space-y-1.5">
-                  {briefing.conversation_hooks.for_live_conversation.map((hook, i) => (
+                  {(briefing?.conversation_hooks?.for_live_conversation ?? []).map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">•</span>
                       {hook}
@@ -472,7 +472,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <div>
               <p className="text-xs text-muted-foreground mb-2 font-medium">Discovery Questions</p>
               <ul className="space-y-1.5">
-                {briefing.conversation_hooks.discovery_questions.map((q, i) => (
+                {(briefing?.conversation_hooks?.discovery_questions ?? []).map((q, i) => (
                   <li key={i} className="text-sm flex gap-2">
                     <span className="text-primary">{i + 1}.</span>
                     {q}
@@ -485,7 +485,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-destructive mb-2 font-medium">Red Flags to Listen For</p>
                 <ul className="space-y-1.5">
-                  {briefing.conversation_hooks.red_flags_to_listen_for.map((flag, i) => (
+                  {(briefing?.conversation_hooks?.red_flags_to_listen_for ?? []).map((flag, i) => (
                     <li key={i} className="text-sm flex gap-2 text-muted-foreground">
                       <span className="text-destructive">⚠</span>
                       {flag}
@@ -517,7 +517,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <div>
               <p className="text-xs text-muted-foreground mb-2 font-medium">Why This Fits</p>
               <ul className="space-y-1.5">
-                {briefing.recommended_angle.why_this_fits.map((reason, i) => (
+                {(briefing?.recommended_angle?.why_this_fits ?? []).map((reason, i) => (
                   <li key={i} className="text-sm flex gap-2">
                     <span className="text-success">✓</span>
                     {reason}
@@ -530,7 +530,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Avoid Leading With</p>
                 <ul className="space-y-1.5">
-                  {briefing.recommended_angle.what_not_to_pitch_first.map((item, i) => (
+                  {(briefing?.recommended_angle?.what_not_to_pitch_first ?? []).map((item, i) => (
                     <li key={i} className="text-sm flex gap-2 text-muted-foreground">
                       <span>✗</span>
                       {item}
@@ -562,7 +562,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div className="mt-3 pt-3 border-t border-border/50">
                 <p className="text-base text-muted-foreground mb-2">Assumptions</p>
                 <ul className="space-y-1">
-                  {briefing.assumptions_and_confidence.assumptions.map((a, i) => (
+                  {(briefing?.assumptions_and_confidence?.assumptions ?? []).map((a, i) => (
                     <li key={i} className="text-sm text-muted-foreground">
                       • {a}
                     </li>
@@ -643,7 +643,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                   <div>
                     <p className="text-xs text-muted-foreground mb-2 font-medium">Career History</p>
                     <div className="space-y-2">
-                      {contactEnrichment.background_career_context.career_history.map((job, i) => (
+                      {(contactEnrichment?.background_career_context?.career_history ?? []).map((job, i) => (
                         <div key={i} className="flex items-center gap-2 text-sm">
                           <span className="text-primary">•</span>
                           <span className="font-medium">{job.title}</span>
@@ -668,7 +668,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                   <div>
                     <p className="text-xs text-muted-foreground mb-2 font-medium">Background-Based Hooks</p>
                     <ul className="space-y-1.5">
-                      {contactEnrichment.background_career_context.conversation_hooks.map((hook, i) => (
+                      {(contactEnrichment?.background_career_context?.conversation_hooks ?? []).map((hook, i) => (
                         <li key={i} className="text-sm flex gap-2">
                           <span className="text-success">💡</span>
                           {hook}
@@ -703,7 +703,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Likely Top Priorities</p>
                 <ul className="space-y-1.5">
-                  {contactEnrichment.role_influence_and_priorities.likely_top_priorities.map((p, i) => (
+                  {(contactEnrichment?.role_influence_and_priorities?.likely_top_priorities ?? []).map((p, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">{i + 1}.</span>
                       {p}
@@ -715,7 +715,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">How They Measure Success</p>
                 <ul className="space-y-1.5">
-                  {contactEnrichment.role_influence_and_priorities.how_they_measure_success.map((m, i) => (
+                  {(contactEnrichment?.role_influence_and_priorities?.how_they_measure_success ?? []).map((m, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-success">📊</span>
                       {m}
@@ -727,7 +727,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Hiring Influence</p>
                 <ul className="space-y-1.5">
-                  {contactEnrichment.role_influence_and_priorities.where_they_influence_hiring.map((h, i) => (
+                  {(contactEnrichment?.role_influence_and_priorities?.where_they_influence_hiring ?? []).map((h, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">•</span>
                       {h}
@@ -761,7 +761,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Value Hypothesis</p>
                 <ul className="space-y-1.5">
-                  {contactEnrichment.best_conversation_entry.value_hypothesis.map((v, i) => (
+                  {(contactEnrichment?.best_conversation_entry?.value_hypothesis ?? []).map((v, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-success">✓</span>
                       {v}
@@ -774,7 +774,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 <div>
                   <p className="text-xs text-destructive mb-2 font-medium">Avoid These Angles</p>
                   <ul className="space-y-1.5">
-                    {contactEnrichment.best_conversation_entry.avoid_these_angles.map((a, i) => (
+                    {(contactEnrichment?.best_conversation_entry?.avoid_these_angles ?? []).map((a, i) => (
                       <li key={i} className="text-sm flex gap-2 text-muted-foreground">
                         <span className="text-destructive">✗</span>
                         {a}
@@ -799,7 +799,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
-                {contactEnrichment.personalized_questions.map((q, i) => (
+                {(contactEnrichment?.personalized_questions ?? []).map((q, i) => (
                   <li key={i} className="text-sm flex gap-2">
                     <span className="text-primary font-medium">{i + 1}.</span>
                     {q}
