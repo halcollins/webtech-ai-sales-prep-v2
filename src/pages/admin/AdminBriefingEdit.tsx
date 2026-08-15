@@ -42,7 +42,12 @@ export default function AdminBriefingEdit() {
 
   useEffect(() => {
     async function fetchBriefing() {
-      if (!id) return;
+      const isUuid = !!id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      if (!isUuid) {
+        setLoading(false);
+        return;
+      }
+
 
       const { data, error } = await supabase
         .from("briefings")
