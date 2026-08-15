@@ -502,8 +502,8 @@ BACKGROUND & CAREER CONTEXT SECTION:
         person_title,
         linkedin_url,
         linkedin_text,
-        contact_enrichment: contactEnrichment,
-        contact_enrichment_md: enrichmentMd,
+        contact_enrichment: stripNullBytes(contactEnrichment),
+        contact_enrichment_md: stripNullBytes(enrichmentMd),
       })
       .select("id")
       .single();
