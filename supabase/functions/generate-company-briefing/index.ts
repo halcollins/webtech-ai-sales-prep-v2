@@ -606,20 +606,19 @@ ${briefing.website_signals.positioning_keywords.join(", ")}
 ### Tech Stack Hints
 ${briefing.website_signals.tech_stack_hints.join(", ")}
 
-### Hiring Signals
-- Careers Page Found: ${briefing.website_signals.hiring_signals.careers_page_found ? "Yes" : "No"}
-- Seniority Mix: ${briefing.website_signals.hiring_signals.seniority_mix}
-- Role Families: ${briefing.website_signals.hiring_signals.role_families_seen.join(", ")}
-- Remote/Hybrid: ${briefing.website_signals.hiring_signals.remote_hybrid_signals.join(", ")}
+### Opportunity Signals
+- Signals Matched: ${briefing.website_signals.opportunity_signals.signals_matched.join(", ")}
+- Content Freshness: ${briefing.website_signals.opportunity_signals.content_freshness}
+- Notable Absences: ${briefing.website_signals.opportunity_signals.notable_absences.join(", ")}
 
-## Likely Hiring & Gaps
-${briefing.likely_hiring_and_gaps
+## Identified Gaps
+${briefing.identified_gaps
   .map(
-    (role: any) => `
-### ${role.role_title} (${"★".repeat(role.difficulty_to_fill_stars)}${"☆".repeat(5 - role.difficulty_to_fill_stars)})
-- **Why It Matters:** ${role.why_it_matters}
-- **Contract vs FTE:** ${role.contract_vs_fte_likelihood}
-- **Common Skills:** ${role.common_skills.join(", ")}
+    (gap: any) => `
+### ${gap.gap_title} (${"★".repeat(gap.urgency_stars)}${"☆".repeat(5 - gap.urgency_stars)})
+- **Why It Matters:** ${gap.why_it_matters}
+- **Addressed By:** ${gap.addressed_by_offering}
+- **Supporting Evidence:** ${gap.supporting_evidence.join(", ")}
 `,
   )
   .join("")}
