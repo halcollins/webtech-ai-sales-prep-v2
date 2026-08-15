@@ -69,9 +69,10 @@ Same profile load and 500 guard; system prompt rewritten around `company_name`, 
 
 A recursive `stripNullBytes` helper in each edge function, applied to `companyBriefing` and `briefingMd` before the `briefings` insert, and to the enrichment payload before its insert — avoiding Postgres 22P05.
 
-## One correction to flag
+## Scope note on BriefingDetail.tsx
 
-Part 6d says `staffing_implication` is dead code. It is not: the current Zod schema defines it on both `recent_news.items[]` and `ai_technology_investments`, and the edge function emits it. Removing the export path would silently drop a rendered section, which conflicts with "preserve every existing briefing section". Plan: keep those fields but rename the exported label from "Staffing Implication" to "Why It Matters" so nothing is lost and no seller-specific wording remains. If you would rather have the field genuinely removed from schema, prompt and UI, say so and I will do that instead.
+Only the `recommended_inceed_angle` reference inside the CRM copy string builder (line 205) is touched. The admin visibility logic in that file is left exactly as-is.
+
 
 ## Technical notes
 
