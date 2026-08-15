@@ -167,9 +167,9 @@ export async function exportBriefingToWord(
     children.push(new Paragraph({ text: "", spacing: { after: 200 } }));
   }
 
-  // Why They Need Staffing
+  // Why They Need You
   if (briefing.why_they_need_you) {
-    children.push(createHeading("💡 Why Staffing Makes Sense", HeadingLevel.HEADING_1));
+    children.push(createHeading("💡 Why They Need Us", HeadingLevel.HEADING_1));
     const wts = briefing.why_they_need_you;
     
     children.push(new Paragraph({
@@ -185,26 +185,26 @@ export async function exportBriefingToWord(
     children.push(new Paragraph({ text: wts.business_context, spacing: { after: 150 } }));
     
     children.push(new Paragraph({
-      children: [new TextRun({ text: "Inceed Value:", bold: true })],
+      children: [new TextRun({ text: "Our Value:", bold: true })],
       spacing: { before: 100, after: 80 },
     }));
     children.push(new Paragraph({ text: wts.value_connection, spacing: { after: 200 } }));
   }
 
-  // Likely Hiring Gaps
-  children.push(createHeading("🎯 Key Hiring Gaps", HeadingLevel.HEADING_1));
-  briefing.identified_gaps.forEach((role, index) => {
+  // Identified Gaps
+  children.push(createHeading("🎯 Identified Gaps", HeadingLevel.HEADING_1));
+  briefing.identified_gaps.forEach((gap, index) => {
     children.push(new Paragraph({
       children: [
-        new TextRun({ text: `${index + 1}. ${role.role_title}`, bold: true }),
-        new TextRun({ text: `  ${createStarRating(role.difficulty_to_fill_stars)} Difficulty` }),
+        new TextRun({ text: `${index + 1}. ${gap.gap_title}`, bold: true }),
+        new TextRun({ text: `  ${createStarRating(gap.urgency_stars)} Urgency` }),
       ],
       spacing: { before: 150, after: 80 },
     }));
-    children.push(new Paragraph({ text: role.why_it_matters, spacing: { after: 80 } }));
-    children.push(createLabeledParagraph("Contract vs FTE", role.contract_vs_fte_likelihood));
+    children.push(new Paragraph({ text: gap.why_it_matters, spacing: { after: 80 } }));
+    children.push(createLabeledParagraph("Addressed by", gap.addressed_by_offering));
     children.push(new Paragraph({
-      text: `Skills: ${role.common_skills.join(", ")}`,
+      text: `Evidence: ${gap.supporting_evidence.join(", ")}`,
       spacing: { after: 150 },
     }));
   });
