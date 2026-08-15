@@ -7,6 +7,24 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Postgres rejects \u0000 in text and jsonb columns (error 22P05).
+function stripNullBytes<T>(value: T): T {
+  if (typeof value === "string") {
+    return value.replace(/\u0000/g, "") as unknown as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => stripNullBytes(item)) as unknown as T;
+  }
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k.replace(/\u0000/g, "")] = stripNullBytes(v);
+    }
+    return out as unknown as T;
+  }
+  return value;
+}
+
 // Input validation schema
 const contactInputSchema = z.object({
   briefing_id: z.string().uuid("Invalid briefing ID format"),
