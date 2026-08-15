@@ -392,31 +392,31 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg">Likely Hiring & Gaps</CardTitle>
+                <CardTitle className="text-lg">Identified Gaps</CardTitle>
               </div>
-              <CopyButton text={JSON.stringify(briefing.identified_gaps, null, 2)} label="Hiring gaps" />
+              <CopyButton text={JSON.stringify(briefing.identified_gaps, null, 2)} label="Identified gaps" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {briefing.identified_gaps.map((role, i) => (
+              {briefing.identified_gaps.map((gap, i) => (
                 <div key={i} className="rounded-lg bg-secondary/30 p-4">
                   <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium">{role.role_title}</h4>
+                    <h4 className="font-medium">{gap.gap_title}</h4>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Difficulty:</span>
-                      <DifficultyStars count={role.difficulty_to_fill_stars} />
+                      <span className="text-xs text-muted-foreground">Urgency:</span>
+                      <DifficultyStars count={gap.urgency_stars} />
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">{role.why_it_matters}</p>
+                  <p className="text-sm text-muted-foreground mb-2">{gap.why_it_matters}</p>
                   <div className="flex items-center gap-4 text-xs">
-                    <span className="text-muted-foreground">{role.contract_vs_fte_likelihood}</span>
+                    <span className="text-muted-foreground">Addressed by: {gap.addressed_by_offering}</span>
                   </div>
-                  {role.common_skills.length > 0 && (
+                  {gap.supporting_evidence.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
-                      {role.common_skills.map((skill, j) => (
+                      {gap.supporting_evidence.map((evidence, j) => (
                         <Badge key={j} variant="outline" className="text-xs">
-                          {skill}
+                          {evidence}
                         </Badge>
                       ))}
                     </div>
