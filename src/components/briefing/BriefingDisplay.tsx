@@ -412,7 +412,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                   <div className="flex items-center gap-4 text-xs">
                     <span className="text-muted-foreground">Addressed by: {gap.addressed_by_offering}</span>
                   </div>
-                  {gap.supporting_evidence.length > 0 && (
+                  {(gap.supporting_evidence ?? []).length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {(gap?.supporting_evidence ?? []).map((evidence, j) => (
                         <Badge key={j} variant="outline" className="text-xs">
