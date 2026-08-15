@@ -186,10 +186,10 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </div>
               )}
 
-              {briefing.ai_technology_investments.staffing_implication && (
+              {briefing.ai_technology_investments.why_it_matters && (
                 <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
-                  <p className="text-xs text-primary mb-1 font-medium">Staffing Implication</p>
-                  <p className="text-sm">{briefing.ai_technology_investments.staffing_implication}</p>
+                  <p className="text-xs text-primary mb-1 font-medium">Why It Matters</p>
+                  <p className="text-sm">{briefing.ai_technology_investments.why_it_matters}</p>
                 </div>
               )}
 
@@ -211,7 +211,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </div>
                 <CopyButton text={JSON.stringify(briefing.recent_news, null, 2)} label="Recent news" />
               </div>
-              <CardDescription>News with staffing implications</CardDescription>
+              <CardDescription>News that affects the conversation</CardDescription>
             </CardHeader>
             <CardContent>
               {briefing.recent_news.items && briefing.recent_news.items.length > 0 ? (
@@ -220,8 +220,8 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                     <div key={i} className="rounded-lg bg-secondary/30 p-3">
                       <p className="text-sm font-medium mb-1">{item.news_item}</p>
                       <p className="text-sm text-muted-foreground">
-                        <span className="text-primary font-medium">Staffing angle: </span>
-                        {item.staffing_implication}
+                        <span className="text-primary font-medium">Why it matters: </span>
+                        {item.why_it_matters}
                       </p>
                     </div>
                   ))}
@@ -291,33 +291,33 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           </Card>
         )}
 
-        {/* NEW: Why They Need Staffing */}
-        {briefing.why_they_need_staffing && (
+        {/* NEW: Why They Need You */}
+        {briefing.why_they_need_you && (
           <Card className="border-border/50 bg-card/50">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Why Staffing Makes Sense Here</CardTitle>
+                  <CardTitle className="text-lg">Why They Need Us</CardTitle>
                 </div>
-                <CopyButton text={JSON.stringify(briefing.why_they_need_staffing, null, 2)} label="Staffing rationale" />
+                <CopyButton text={JSON.stringify(briefing.why_they_need_you, null, 2)} label="Rationale" />
               </div>
               <CardDescription>Understanding the business need</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <p className="text-xs text-muted-foreground mb-1 font-medium">The Pain Point</p>
-                <p className="text-sm">{briefing.why_they_need_staffing.pain_point_explanation}</p>
+                <p className="text-sm">{briefing.why_they_need_you.pain_point_explanation}</p>
               </div>
 
               <div>
                 <p className="text-xs text-muted-foreground mb-1 font-medium">Business Context</p>
-                <p className="text-sm">{briefing.why_they_need_staffing.business_context}</p>
+                <p className="text-sm">{briefing.why_they_need_you.business_context}</p>
               </div>
 
               <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
-                <p className="text-xs text-primary mb-1 font-medium">How Inceed Helps</p>
-                <p className="text-sm">{briefing.why_they_need_staffing.inceed_value_connection}</p>
+                <p className="text-xs text-primary mb-1 font-medium">How We Help</p>
+                <p className="text-sm">{briefing.why_they_need_you.value_connection}</p>
               </div>
             </CardContent>
           </Card>
@@ -361,7 +361,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
         )}
 
         {/* NEW: New Rep FAQ */}
-        {briefing.new_rep_faq && briefing.new_rep_faq.length > 0 && (
+        {briefing.if_they_ask && briefing.if_they_ask.length > 0 && (
           <Card className="border-border/50 bg-card/50">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -369,13 +369,13 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                   <HelpCircle className="h-5 w-5 text-primary" />
                   <CardTitle className="text-lg">If They Ask...</CardTitle>
                 </div>
-                <CopyButton text={JSON.stringify(briefing.new_rep_faq, null, 2)} label="FAQ" />
+                <CopyButton text={JSON.stringify(briefing.if_they_ask, null, 2)} label="FAQ" />
               </div>
               <CardDescription>Quick reference for common questions</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {briefing.new_rep_faq.map((faq, i) => (
+                {briefing.if_they_ask.map((faq, i) => (
                   <div key={i} className="rounded-lg bg-secondary/30 p-4">
                     <p className="text-sm font-medium mb-2">{faq.question}</p>
                     <p className="text-sm text-muted-foreground">{faq.answer_framework}</p>
@@ -392,31 +392,31 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg">Likely Hiring & Gaps</CardTitle>
+                <CardTitle className="text-lg">Identified Gaps</CardTitle>
               </div>
-              <CopyButton text={JSON.stringify(briefing.likely_hiring_and_gaps, null, 2)} label="Hiring gaps" />
+              <CopyButton text={JSON.stringify(briefing.identified_gaps, null, 2)} label="Identified gaps" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {briefing.likely_hiring_and_gaps.map((role, i) => (
+              {briefing.identified_gaps.map((gap, i) => (
                 <div key={i} className="rounded-lg bg-secondary/30 p-4">
                   <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium">{role.role_title}</h4>
+                    <h4 className="font-medium">{gap.gap_title}</h4>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Difficulty:</span>
-                      <DifficultyStars count={role.difficulty_to_fill_stars} />
+                      <span className="text-xs text-muted-foreground">Urgency:</span>
+                      <DifficultyStars count={gap.urgency_stars} />
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">{role.why_it_matters}</p>
+                  <p className="text-sm text-muted-foreground mb-2">{gap.why_it_matters}</p>
                   <div className="flex items-center gap-4 text-xs">
-                    <span className="text-muted-foreground">{role.contract_vs_fte_likelihood}</span>
+                    <span className="text-muted-foreground">Addressed by: {gap.addressed_by_offering}</span>
                   </div>
-                  {role.common_skills.length > 0 && (
+                  {gap.supporting_evidence.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
-                      {role.common_skills.map((skill, j) => (
+                      {gap.supporting_evidence.map((evidence, j) => (
                         <Badge key={j} variant="outline" className="text-xs">
-                          {skill}
+                          {evidence}
                         </Badge>
                       ))}
                     </div>
@@ -446,9 +446,9 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">For Recruiter</p>
+                <p className="text-xs text-muted-foreground mb-2 font-medium">First Touch</p>
                 <ul className="space-y-1.5">
-                  {briefing.conversation_hooks.for_recruiter.map((hook, i) => (
+                  {briefing.conversation_hooks.for_first_touch.map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">•</span>
                       {hook}
@@ -457,9 +457,9 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </ul>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">For Sales</p>
+                <p className="text-xs text-muted-foreground mb-2 font-medium">Live Conversation</p>
                 <ul className="space-y-1.5">
-                  {briefing.conversation_hooks.for_sales.map((hook, i) => (
+                  {briefing.conversation_hooks.for_live_conversation.map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">
                       <span className="text-primary">•</span>
                       {hook}
@@ -497,27 +497,27 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
           </CardContent>
         </Card>
 
-        {/* Inceed Angle */}
+        {/* Recommended Angle */}
         <Card className="border-border/50 bg-card/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Lightbulb className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg">Recommended Inceed Angle</CardTitle>
+                <CardTitle className="text-lg">Recommended Angle</CardTitle>
               </div>
-              <CopyButton text={JSON.stringify(briefing.recommended_inceed_angle, null, 2)} label="Inceed angle" />
+              <CopyButton text={JSON.stringify(briefing.recommended_angle, null, 2)} label="Recommended angle" />
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
               <p className="text-xs text-primary mb-1 font-medium">Lead With</p>
-              <p className="text-lg font-medium">{briefing.recommended_inceed_angle.primary_service_to_lead_with}</p>
+              <p className="text-lg font-medium">{briefing.recommended_angle.primary_service_to_lead_with}</p>
             </div>
 
             <div>
               <p className="text-xs text-muted-foreground mb-2 font-medium">Why This Fits</p>
               <ul className="space-y-1.5">
-                {briefing.recommended_inceed_angle.why_this_fits.map((reason, i) => (
+                {briefing.recommended_angle.why_this_fits.map((reason, i) => (
                   <li key={i} className="text-sm flex gap-2">
                     <span className="text-success">✓</span>
                     {reason}
@@ -526,11 +526,11 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
               </ul>
             </div>
 
-            {briefing.recommended_inceed_angle.what_not_to_pitch_first.length > 0 && (
+            {briefing.recommended_angle.what_not_to_pitch_first.length > 0 && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium">Avoid Leading With</p>
                 <ul className="space-y-1.5">
-                  {briefing.recommended_inceed_angle.what_not_to_pitch_first.map((item, i) => (
+                  {briefing.recommended_angle.what_not_to_pitch_first.map((item, i) => (
                     <li key={i} className="text-sm flex gap-2 text-muted-foreground">
                       <span>✗</span>
                       {item}

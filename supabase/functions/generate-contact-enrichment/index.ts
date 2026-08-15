@@ -7,6 +7,24 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Postgres rejects \u0000 in text and jsonb columns (error 22P05).
+function stripNullBytes<T>(value: T): T {
+  if (typeof value === "string") {
+    return value.replace(/\u0000/g, "") as unknown as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => stripNullBytes(item)) as unknown as T;
+  }
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k.replace(/\u0000/g, "")] = stripNullBytes(v);
+    }
+    return out as unknown as T;
+  }
+  return value;
+}
+
 // Input validation schema
 const contactInputSchema = z.object({
   briefing_id: z.string().uuid("Invalid briefing ID format"),
@@ -336,19 +354,64 @@ serve(async (req) => {
       contextParts.push(`\nBACKGROUND RESEARCH: Research unavailable. Generate background_career_context with research_available: false and infer based on title/company.`);
     }
 
+    // Load the single seller profile (service role bypasses RLS)
+    const { data: profile, error: profileError } = await supabase
+      .from("company_profile")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Failed to load company profile:", profileError);
+      throw new Error("Failed to load company profile");
+    }
+
+    if (!profile) {
+      return new Response(
+        JSON.stringify({
+          error: "No company profile configured. An admin must set one up before enrichment can be generated.",
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const sellerName = profile.company_name;
+    const formatList = (items: unknown): string => {
+      if (!Array.isArray(items) || items.length === 0) return "(none provided)";
+      return items.map((i) => `- ${typeof i === "string" ? i : JSON.stringify(i)}`).join("\n");
+    };
+
     // Add company briefing context
     if (briefingData.company_briefing) {
       const cb = briefingData.company_briefing as any;
       contextParts.push(`\nCOMPANY BRIEFING CONTEXT:`);
       contextParts.push(`- One-liner: ${cb.company_snapshot?.one_liner || "N/A"}`);
       contextParts.push(`- What they sell: ${cb.company_snapshot?.what_they_sell || "N/A"}`);
-      contextParts.push(`- Recommended lead service: ${cb.recommended_inceed_angle?.primary_service_to_lead_with || "N/A"}`);
-      if (cb.likely_hiring_and_gaps) {
-        contextParts.push(`- Key hiring gaps: ${cb.likely_hiring_and_gaps.map((g: any) => g.role_title).join(", ")}`);
+      contextParts.push(`- Recommended lead service: ${cb.recommended_angle?.primary_service_to_lead_with || "N/A"}`);
+      if (cb.identified_gaps) {
+        contextParts.push(`- Key identified gaps: ${cb.identified_gaps.map((g: any) => g.gap_title).join(", ")}`);
       }
     }
 
-    const systemPrompt = `You are an expert sales and recruiting strategist for Inceed, a recruiting agency. Your job is to generate personalized contact preparation that helps team members connect with specific decision-makers.
+    const systemPrompt = `You are an expert sales strategist for ${sellerName}. Your job is to generate personalized contact preparation that helps team members connect with specific decision-makers.
+
+ABOUT THE SELLER (${sellerName}):
+- Website: ${profile.website ?? "(not provided)"}
+- Who they serve: ${profile.who_we_serve ?? "(not specified)"}
+
+WHAT ${sellerName.toUpperCase()} SELLS:
+${formatList(profile.what_we_sell)}
+
+PROOF POINTS:
+${formatList(profile.proof_points)}
+
+KNOWN OBJECTIONS TO ANTICIPATE:
+${formatList(profile.known_objections)}
+
+WORDS AND PHRASES YOU MUST NEVER USE:
+${formatList(profile.banned_words)}
+
+REP EXPERIENCE LEVEL: ${profile.rep_experience_level}
 
 CRITICAL RULES:
 1. You must NEVER claim specific career history or experience if no LinkedIn text was provided AND no background research is available
@@ -357,6 +420,7 @@ CRITICAL RULES:
 4. The opening line should be natural and not presumptuous
 5. The follow-up email should be professional and under 150 words
 6. Always include the no-scraping statement confirming only provided inputs were used
+7. Only reference offerings that appear in WHAT ${sellerName.toUpperCase()} SELLS
 
 BACKGROUND & CAREER CONTEXT SECTION:
 - If background research is available, extract location, education, career history (with company, title, tenure), and professional reputation
@@ -364,9 +428,7 @@ BACKGROUND & CAREER CONTEXT SECTION:
 - Set research_available: true if research data was provided and useful
 - Set research_available: false if research was unavailable or inconclusive
 - For career_history, list 3-5 most relevant roles; use "N/A" for tenure if unknown
-- If no concrete background info is available, leave location/education as null and career_history as empty array
-
-Inceed offers: IT staffing, direct hire placement, contract-to-hire, executive search, and workforce consulting.`;
+- If no concrete background info is available, leave location/education as null and career_history as empty array`;
 
     const userPrompt = `Generate contact enrichment for the following context:\n\n${contextParts.join("\n")}`;
 
@@ -383,7 +445,7 @@ Inceed offers: IT staffing, direct hire placement, contract-to-hire, executive s
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3.6-flash",
+        model: profile.ai_model,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -458,8 +520,8 @@ Inceed offers: IT staffing, direct hire placement, contract-to-hire, executive s
         person_title,
         linkedin_url,
         linkedin_text,
-        contact_enrichment: contactEnrichment,
-        contact_enrichment_md: enrichmentMd,
+        contact_enrichment: stripNullBytes(contactEnrichment),
+        contact_enrichment_md: stripNullBytes(enrichmentMd),
       })
       .select("id")
       .single();

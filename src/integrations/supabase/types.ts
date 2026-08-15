@@ -124,6 +124,72 @@ export type Database = {
         }
         Relationships: []
       }
+      company_profile: {
+        Row: {
+          ai_model: string
+          banned_words: Json
+          bot_user_agent: string
+          company_name: string
+          competitors: Json
+          disqualifiers: Json
+          id: string
+          known_objections: Json
+          org_id: string
+          price_range: string | null
+          proof_points: Json
+          rep_experience_level: string
+          singleton: boolean
+          standard_faqs: Json
+          trigger_signals: Json
+          updated_at: string
+          website: string | null
+          what_we_sell: Json
+          who_we_serve: string | null
+        }
+        Insert: {
+          ai_model?: string
+          banned_words?: Json
+          bot_user_agent?: string
+          company_name: string
+          competitors?: Json
+          disqualifiers?: Json
+          id?: string
+          known_objections?: Json
+          org_id?: string
+          price_range?: string | null
+          proof_points?: Json
+          rep_experience_level?: string
+          singleton?: boolean
+          standard_faqs?: Json
+          trigger_signals?: Json
+          updated_at?: string
+          website?: string | null
+          what_we_sell?: Json
+          who_we_serve?: string | null
+        }
+        Update: {
+          ai_model?: string
+          banned_words?: Json
+          bot_user_agent?: string
+          company_name?: string
+          competitors?: Json
+          disqualifiers?: Json
+          id?: string
+          known_objections?: Json
+          org_id?: string
+          price_range?: string | null
+          proof_points?: Json
+          rep_experience_level?: string
+          singleton?: boolean
+          standard_faqs?: Json
+          trigger_signals?: Json
+          updated_at?: string
+          website?: string | null
+          what_we_sell?: Json
+          who_we_serve?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null

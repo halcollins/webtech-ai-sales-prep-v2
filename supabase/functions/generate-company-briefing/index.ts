@@ -195,7 +195,7 @@ const COMPANY_BRIEFING_SCHEMA = {
             type: "object",
             properties: {
               url: { type: "string" },
-              type: { type: "string", enum: ["homepage", "about", "careers", "contact", "team", "other"] },
+              type: { type: "string", enum: ["homepage", "about", "services", "news", "careers", "contact", "team", "other"] },
               fetch_status: { type: "string", enum: ["ok", "failed"] },
             },
             required: ["url", "type", "fetch_status"],
@@ -204,18 +204,17 @@ const COMPANY_BRIEFING_SCHEMA = {
         products_services: { type: "array", items: { type: "string" } },
         positioning_keywords: { type: "array", items: { type: "string" } },
         tech_stack_hints: { type: "array", items: { type: "string" } },
-        hiring_signals: {
+        opportunity_signals: {
           type: "object",
           properties: {
-            careers_page_found: { type: "boolean" },
-            role_families_seen: { type: "array", items: { type: "string" } },
-            seniority_mix: { type: "string" },
-            remote_hybrid_signals: { type: "array", items: { type: "string" } },
+            signals_matched: { type: "array", items: { type: "string" } },
+            content_freshness: { type: "string" },
+            notable_absences: { type: "array", items: { type: "string" } },
           },
-          required: ["careers_page_found", "role_families_seen", "seniority_mix", "remote_hybrid_signals"],
+          required: ["signals_matched", "content_freshness", "notable_absences"],
         },
       },
-      required: ["pages_reviewed", "products_services", "positioning_keywords", "tech_stack_hints", "hiring_signals"],
+      required: ["pages_reviewed", "products_services", "positioning_keywords", "tech_stack_hints", "opportunity_signals"],
     },
     // NEW: Qualification Assessment
     qualification_assessment: {
@@ -228,15 +227,15 @@ const COMPANY_BRIEFING_SCHEMA = {
       },
       required: ["score", "positive_signals", "concerns", "recommendation"],
     },
-    // NEW: Why They Need Staffing
-    why_they_need_staffing: {
+    // NEW: Why They Need You
+    why_they_need_you: {
       type: "object",
       properties: {
         pain_point_explanation: { type: "string" },
         business_context: { type: "string" },
-        inceed_value_connection: { type: "string" },
+        value_connection: { type: "string" },
       },
-      required: ["pain_point_explanation", "business_context", "inceed_value_connection"],
+      required: ["pain_point_explanation", "business_context", "value_connection"],
     },
     // NEW: Common Objections
     common_objections: {
@@ -251,8 +250,8 @@ const COMPANY_BRIEFING_SCHEMA = {
         required: ["objection", "why_they_say_this", "suggested_response"],
       },
     },
-    // NEW: New Rep FAQ
-    new_rep_faq: {
+    // NEW: If They Ask
+    if_they_ask: {
       type: "array",
       items: {
         type: "object",
@@ -263,44 +262,44 @@ const COMPANY_BRIEFING_SCHEMA = {
         required: ["question", "answer_framework"],
       },
     },
-    likely_hiring_and_gaps: {
+    identified_gaps: {
       type: "array",
       items: {
         type: "object",
         properties: {
-          role_title: { type: "string" },
+          gap_title: { type: "string" },
           why_it_matters: { type: "string" },
-          difficulty_to_fill_stars: { type: "number", minimum: 1, maximum: 5 },
-          contract_vs_fte_likelihood: { type: "string" },
-          common_skills: { type: "array", items: { type: "string" } },
+          urgency_stars: { type: "number", minimum: 1, maximum: 5 },
+          addressed_by_offering: { type: "string" },
+          supporting_evidence: { type: "array", items: { type: "string" } },
         },
         required: [
-          "role_title",
+          "gap_title",
           "why_it_matters",
-          "difficulty_to_fill_stars",
-          "contract_vs_fte_likelihood",
-          "common_skills",
+          "urgency_stars",
+          "addressed_by_offering",
+          "supporting_evidence",
         ],
       },
     },
     conversation_hooks: {
       type: "object",
       properties: {
-        for_recruiter: { type: "array", items: { type: "string" } },
-        for_sales: { type: "array", items: { type: "string" } },
+        for_first_touch: { type: "array", items: { type: "string" } },
+        for_live_conversation: { type: "array", items: { type: "string" } },
         sample_opener_script: { type: "string" },
         discovery_questions: { type: "array", items: { type: "string" } },
         red_flags_to_listen_for: { type: "array", items: { type: "string" } },
       },
       required: [
-        "for_recruiter",
-        "for_sales",
+        "for_first_touch",
+        "for_live_conversation",
         "sample_opener_script",
         "discovery_questions",
         "red_flags_to_listen_for",
       ],
     },
-    recommended_inceed_angle: {
+    recommended_angle: {
       type: "object",
       properties: {
         primary_service_to_lead_with: { type: "string" },
@@ -322,19 +321,23 @@ const COMPANY_BRIEFING_SCHEMA = {
     "company_snapshot",
     "website_signals",
     "qualification_assessment",
-    "why_they_need_staffing",
+    "why_they_need_you",
     "common_objections",
-    "new_rep_faq",
-    "likely_hiring_and_gaps",
+    "if_they_ask",
+    "identified_gaps",
     "conversation_hooks",
-    "recommended_inceed_angle",
+    "recommended_angle",
     "assumptions_and_confidence",
   ],
 };
 
-async function fetchWebsiteContent(url: string): Promise<{ content: string; pages: any[]; success: boolean }> {
+async function fetchWebsiteContent(
+  url: string,
+  botUserAgent: string,
+): Promise<{ content: string; pages: any[]; success: boolean }> {
   const pages: any[] = [];
   let combinedContent = "";
+  const userAgent = `Mozilla/5.0 (compatible; ${botUserAgent})`;
 
   // Validate URL before fetching
   if (!isAllowedUrl(url)) {
@@ -350,7 +353,7 @@ async function fetchWebsiteContent(url: string): Promise<{ content: string; page
 
     // Fetch homepage
     const homeResponse = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+      headers: { "User-Agent": userAgent },
       signal: controller.signal,
     });
 
@@ -388,7 +391,7 @@ async function fetchWebsiteContent(url: string): Promise<{ content: string; page
             const aboutTimeoutId = setTimeout(() => aboutController.abort(), 10000);
 
             const aboutResponse = await fetch(aboutUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+              headers: { "User-Agent": userAgent },
               signal: aboutController.signal,
             });
 
@@ -412,41 +415,78 @@ async function fetchWebsiteContent(url: string): Promise<{ content: string; page
         }
       }
 
-      // Try to find and fetch Careers page
-      const careersMatch = html.match(/href=["']([^"']*(?:careers|jobs|hiring|join)[^"']*)["']/i);
-      if (careersMatch) {
+      // Try to find and fetch Services page
+      const servicesMatch = html.match(/href=["']([^"']*(?:services|solutions|what-we-do|products)[^"']*)["']/i);
+      if (servicesMatch) {
         try {
-          const careersUrl = new URL(careersMatch[1], url).href;
+          const servicesUrl = new URL(servicesMatch[1], url).href;
 
           // Validate discovered URL too
-          if (isAllowedUrl(careersUrl)) {
-            const careersController = new AbortController();
-            const careersTimeoutId = setTimeout(() => careersController.abort(), 10000);
+          if (isAllowedUrl(servicesUrl)) {
+            const servicesController = new AbortController();
+            const servicesTimeoutId = setTimeout(() => servicesController.abort(), 10000);
 
-            const careersResponse = await fetch(careersUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
-              signal: careersController.signal,
+            const servicesResponse = await fetch(servicesUrl, {
+              headers: { "User-Agent": userAgent },
+              signal: servicesController.signal,
             });
 
-            clearTimeout(careersTimeoutId);
+            clearTimeout(servicesTimeoutId);
 
-            if (careersResponse.ok) {
-              const careersHtml = await careersResponse.text();
-              const careersText = careersHtml
+            if (servicesResponse.ok) {
+              const servicesHtml = await servicesResponse.text();
+              const servicesText = servicesHtml
                 .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
                 .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
                 .replace(/<[^>]+>/g, " ")
                 .replace(/\s+/g, " ")
                 .trim()
                 .slice(0, 10000);
-              combinedContent += `CAREERS PAGE:\n${careersText}\n\n`;
-              pages.push({ url: careersUrl, type: "careers", fetch_status: "ok" });
+              combinedContent += `SERVICES PAGE:\n${servicesText}\n\n`;
+              pages.push({ url: servicesUrl, type: "services", fetch_status: "ok" });
             }
           }
         } catch (e) {
-          console.log("Failed to fetch careers page:", e);
+          console.log("Failed to fetch services page:", e);
         }
       }
+
+      // Try to find and fetch News/Blog page
+      const newsMatch = html.match(/href=["']([^"']*(?:blog|news|insights|resources|case-stud)[^"']*)["']/i);
+      if (newsMatch) {
+        try {
+          const newsUrl = new URL(newsMatch[1], url).href;
+
+          // Validate discovered URL too
+          if (isAllowedUrl(newsUrl)) {
+            const newsController = new AbortController();
+            const newsTimeoutId = setTimeout(() => newsController.abort(), 10000);
+
+            const newsResponse = await fetch(newsUrl, {
+              headers: { "User-Agent": userAgent },
+              signal: newsController.signal,
+            });
+
+            clearTimeout(newsTimeoutId);
+
+            if (newsResponse.ok) {
+              const newsHtml = await newsResponse.text();
+              const newsText = newsHtml
+                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+                .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+                .replace(/<[^>]+>/g, " ")
+                .replace(/\s+/g, " ")
+                .trim()
+                .slice(0, 10000);
+              combinedContent += `NEWS PAGE:\n${newsText}\n\n`;
+              pages.push({ url: newsUrl, type: "news", fetch_status: "ok" });
+            }
+          }
+        } catch (e) {
+          console.log("Failed to fetch news page:", e);
+        }
+      }
+
 
       // Try to find and fetch Team/Leadership page
       const teamMatch = html.match(
@@ -461,7 +501,7 @@ async function fetchWebsiteContent(url: string): Promise<{ content: string; page
             const teamTimeoutId = setTimeout(() => teamController.abort(), 10000);
 
             const teamResponse = await fetch(teamUrl, {
-              headers: { "User-Agent": "Mozilla/5.0 (compatible; InceedBot/1.0)" },
+              headers: { "User-Agent": userAgent },
               signal: teamController.signal,
             });
 
@@ -522,16 +562,16 @@ ${briefing.qualification_assessment.concerns.map((c: string) => `⚠️ ${c}`).j
 ### Recommendation
 ${briefing.qualification_assessment.recommendation}
 
-## Why Staffing Makes Sense Here
+## Why They Need Us
 
 ### The Pain Point
-${briefing.why_they_need_staffing.pain_point_explanation}
+${briefing.why_they_need_you.pain_point_explanation}
 
 ### Business Context
-${briefing.why_they_need_staffing.business_context}
+${briefing.why_they_need_you.business_context}
 
-### How Inceed Helps
-${briefing.why_they_need_staffing.inceed_value_connection}
+### How We Help
+${briefing.why_they_need_you.value_connection}
 
 ## If They Push Back...
 ${briefing.common_objections
@@ -546,7 +586,7 @@ ${briefing.common_objections
   .join("")}
 
 ## If They Ask...
-${briefing.new_rep_faq
+${briefing.if_they_ask
   .map(
     (faq: any) => `
 **${faq.question}**
@@ -566,20 +606,19 @@ ${briefing.website_signals.positioning_keywords.join(", ")}
 ### Tech Stack Hints
 ${briefing.website_signals.tech_stack_hints.join(", ")}
 
-### Hiring Signals
-- Careers Page Found: ${briefing.website_signals.hiring_signals.careers_page_found ? "Yes" : "No"}
-- Seniority Mix: ${briefing.website_signals.hiring_signals.seniority_mix}
-- Role Families: ${briefing.website_signals.hiring_signals.role_families_seen.join(", ")}
-- Remote/Hybrid: ${briefing.website_signals.hiring_signals.remote_hybrid_signals.join(", ")}
+### Opportunity Signals
+- Signals Matched: ${briefing.website_signals.opportunity_signals.signals_matched.join(", ")}
+- Content Freshness: ${briefing.website_signals.opportunity_signals.content_freshness}
+- Notable Absences: ${briefing.website_signals.opportunity_signals.notable_absences.join(", ")}
 
-## Likely Hiring & Gaps
-${briefing.likely_hiring_and_gaps
+## Identified Gaps
+${briefing.identified_gaps
   .map(
-    (role: any) => `
-### ${role.role_title} (${"★".repeat(role.difficulty_to_fill_stars)}${"☆".repeat(5 - role.difficulty_to_fill_stars)})
-- **Why It Matters:** ${role.why_it_matters}
-- **Contract vs FTE:** ${role.contract_vs_fte_likelihood}
-- **Common Skills:** ${role.common_skills.join(", ")}
+    (gap: any) => `
+### ${gap.gap_title} (${"★".repeat(gap.urgency_stars)}${"☆".repeat(5 - gap.urgency_stars)})
+- **Why It Matters:** ${gap.why_it_matters}
+- **Addressed By:** ${gap.addressed_by_offering}
+- **Supporting Evidence:** ${gap.supporting_evidence.join(", ")}
 `,
   )
   .join("")}
@@ -589,11 +628,11 @@ ${briefing.likely_hiring_and_gaps
 ### Sample Opener
 > "${briefing.conversation_hooks.sample_opener_script}"
 
-### For Recruiter
-${briefing.conversation_hooks.for_recruiter.map((h: string) => `- ${h}`).join("\n")}
+### First Touch
+${briefing.conversation_hooks.for_first_touch.map((h: string) => `- ${h}`).join("\n")}
 
-### For Sales
-${briefing.conversation_hooks.for_sales.map((h: string) => `- ${h}`).join("\n")}
+### Live Conversation
+${briefing.conversation_hooks.for_live_conversation.map((h: string) => `- ${h}`).join("\n")}
 
 ### Discovery Questions
 ${briefing.conversation_hooks.discovery_questions.map((q: string, i: number) => `${i + 1}. ${q}`).join("\n")}
@@ -601,15 +640,15 @@ ${briefing.conversation_hooks.discovery_questions.map((q: string, i: number) => 
 ### Red Flags to Listen For
 ${briefing.conversation_hooks.red_flags_to_listen_for.map((f: string) => `⚠️ ${f}`).join("\n")}
 
-## Recommended Inceed Angle
+## Recommended Angle
 
-**Lead With:** ${briefing.recommended_inceed_angle.primary_service_to_lead_with}
+**Lead With:** ${briefing.recommended_angle.primary_service_to_lead_with}
 
 ### Why This Fits
-${briefing.recommended_inceed_angle.why_this_fits.map((r: string) => `✓ ${r}`).join("\n")}
+${briefing.recommended_angle.why_this_fits.map((r: string) => `✓ ${r}`).join("\n")}
 
 ### What Not to Pitch First
-${briefing.recommended_inceed_angle.what_not_to_pitch_first.map((x: string) => `✗ ${x}`).join("\n")}
+${briefing.recommended_angle.what_not_to_pitch_first.map((x: string) => `✗ ${x}`).join("\n")}
 
 ## Confidence: ${briefing.assumptions_and_confidence.confidence_score_0_100}%
 
@@ -618,6 +657,29 @@ ${briefing.assumptions_and_confidence.assumptions.map((a: string) => `- ${a}`).j
 `;
 
   return md;
+}
+
+// Postgres rejects \u0000 in text and jsonb columns (error 22P05).
+function stripNullBytes<T>(value: T): T {
+  if (typeof value === "string") {
+    return value.replace(/\u0000/g, "") as unknown as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => stripNullBytes(item)) as unknown as T;
+  }
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k.replace(/\u0000/g, "")] = stripNullBytes(v);
+    }
+    return out as unknown as T;
+  }
+  return value;
+}
+
+function formatList(items: unknown): string {
+  if (!Array.isArray(items) || items.length === 0) return "(none provided)";
+  return items.map((i) => `- ${typeof i === "string" ? i : JSON.stringify(i)}`).join("\n");
 }
 
 serve(async (req) => {
@@ -696,8 +758,30 @@ serve(async (req) => {
 
     console.log(`Generating briefing for ${company_name} (${company_url}) by user ${user_id}`);
 
+    // Load the single seller profile (service role bypasses RLS)
+    const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
+    const { data: profile, error: profileError } = await serviceClient
+      .from("company_profile")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Failed to load company profile:", profileError);
+      throw new Error("Failed to load company profile");
+    }
+
+    if (!profile) {
+      return new Response(
+        JSON.stringify({
+          error: "No company profile configured. An admin must set one up before briefings can be generated.",
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     // Fetch website content
-    const websiteData = await fetchWebsiteContent(company_url);
+    const websiteData = await fetchWebsiteContent(company_url, profile.bot_user_agent);
     console.log(`Fetched ${websiteData.pages.length} pages, success: ${websiteData.success}`);
 
     // Build context for LLM
@@ -723,51 +807,79 @@ serve(async (req) => {
       );
     }
 
-    const systemPrompt = `You are helping a BRAND NEW sales rep at Inceed (an IT and Accounting/Finance staffing firm based in Tulsa, OK) prepare for their first client calls. They are still learning:
-- How to identify good target companies
-- Why companies use staffing firms
-- How to handle common objections
-- What to say when asked basic questions about Inceed
+    const sellerName = profile.company_name;
+    const experience = profile.rep_experience_level;
+    const experienceGuidance =
+      experience === "new"
+        ? `The rep is BRAND NEW. Your output should EDUCATE and BUILD CONFIDENCE, explaining the "why" behind every recommendation in plain language.`
+        : experience === "experienced"
+          ? `The rep is EXPERIENCED. Be concise and skip basic explanations; focus on sharp, specific insight.`
+          : `The rep has moderate experience. Balance explanation with efficiency.`;
 
-Your output should EDUCATE and BUILD CONFIDENCE, not just provide data.
+    const systemPrompt = `You are helping a sales rep at ${sellerName} prepare for a client conversation.
+
+ABOUT THE SELLER (${sellerName}):
+- Website: ${profile.website ?? "(not provided)"}
+- Who they serve: ${profile.who_we_serve ?? "(not specified)"}
+- Price range: ${profile.price_range ?? "(not specified)"}
+
+WHAT ${sellerName.toUpperCase()} SELLS:
+${formatList(profile.what_we_sell)}
+
+PROOF POINTS:
+${formatList(profile.proof_points)}
+
+BUYING/TRIGGER SIGNALS TO LOOK FOR:
+${formatList(profile.trigger_signals)}
+
+DISQUALIFIERS (signs this is a poor fit):
+${formatList(profile.disqualifiers)}
+
+KNOWN COMPETITORS:
+${formatList(profile.competitors)}
+
+KNOWN OBJECTIONS TO ANTICIPATE:
+${formatList(profile.known_objections)}
+
+STANDARD FAQs THE REP MUST BE ABLE TO ANSWER:
+${formatList(profile.standard_faqs)}
+
+WORDS AND PHRASES YOU MUST NEVER USE:
+${formatList(profile.banned_words)}
+
+REP EXPERIENCE LEVEL: ${experience}
+${experienceGuidance}
 
 IMPORTANT RULES:
 1. If data is missing, state assumptions clearly and label them as "likely" or "assumed"
-2. Generate exactly 5 likely hiring gaps if possible
+2. Generate exactly 5 identified gaps if possible
 3. Be specific and actionable in your recommendations
-4. Difficulty ratings (1-5 stars) should reflect market reality
+4. Urgency ratings (1-5 stars) should reflect market reality
 5. The sample opener script should be natural and conversational
 6. Focus on insights that are immediately useful for a call
 7. If a TEAM PAGE section is provided, use any named leadership or department heads shown there to sharpen your recommended angle and conversation hooks. Only reference people explicitly listed on the page. Never guess names.
+8. Only recommend offerings that appear in WHAT ${sellerName.toUpperCase()} SELLS.
 
 For the Qualification Assessment:
 - Be honest if this doesn't look like a strong fit
-- Explain your reasoning so they learn what to look for
-- Consider: Are they hiring in roles Inceed fills? Do they show signs of using contractors? Are they growing or in transition?
-- Scores: "Strong fit" (clearly needs staffing in IT/Finance), "Possible fit" (some signals), "Needs validation" (unclear), "Likely not a fit" (poor signals)
+- Explain your reasoning so the rep learns what to look for
+- Weigh the trigger signals and disqualifiers listed above
+- Scores: "Strong fit", "Possible fit", "Needs validation", "Likely not a fit"
 
-For "Why They'd Need Inceed":
-- Explain the business pain in simple terms a new rep can understand
-- Connect it to what Inceed actually does
-- Help them understand WHY staffing solves problems, not just THAT it does
+For "Why They Need You":
+- Explain the business pain in simple, concrete terms
+- Connect it to what ${sellerName} actually sells
+- Help the rep understand WHY the offering solves the problem, not just THAT it does
 
 For Objection Handling:
-- Anticipate 2-4 likely objections based on company size, industry, and signals
-- Common objections include: "We use an MSP/preferred vendor", "We only hire full-time", "We handle recruiting internally", "We're not hiring right now", "We've had bad experiences with staffing firms"
+- Anticipate 2-4 likely objections, drawing first on the KNOWN OBJECTIONS above and then on company size, industry, and signals
 - Explain WHY the client might say this (builds empathy)
 - Provide conversational response frameworks, not scripts
 
-For the FAQ section:
-- Always include these standard Inceed questions:
-  * "What does Inceed charge?"
-  * "What's your process/timeline?"
-  * "What makes Inceed different?"
-  * "What roles do you fill?"
+For the "If They Ask" section:
+- Always cover the STANDARD FAQs listed above
 - Plus 1-2 company-specific questions based on their industry or situation
-- Provide simple, confident answer frameworks
-- Keep it conversational, not corporate
-
-Inceed offers: IT staffing, Accounting/Finance staffing, direct hire placement, contract-to-hire, executive search, and workforce consulting.`;
+- Provide simple, confident answer frameworks; keep it conversational, not corporate`;
 
     const userPrompt = `Generate a company briefing for the following context:\n\n${contextParts.join("\n")}`;
 
@@ -784,7 +896,7 @@ Inceed offers: IT staffing, Accounting/Finance staffing, direct hire placement, 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3.6-flash",
+        model: profile.ai_model,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -832,16 +944,16 @@ Inceed offers: IT staffing, Accounting/Finance staffing, direct hire placement, 
       throw new Error("Invalid AI response structure");
     }
 
-    const companyBriefing = JSON.parse(toolCall.function.arguments);
+    const companyBriefing = stripNullBytes(JSON.parse(toolCall.function.arguments));
 
     // Update pages reviewed with actual fetch results
-    companyBriefing.website_signals.pages_reviewed = websiteData.pages;
+    companyBriefing.website_signals.pages_reviewed = stripNullBytes(websiteData.pages);
 
     // Generate markdown
-    const briefingMd = generateMarkdown(companyBriefing);
+    const briefingMd = stripNullBytes(generateMarkdown(companyBriefing));
 
     // Use service role key for database operations
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = serviceClient;
 
     const { data: briefingData, error: dbError } = await supabase
       .from("briefings")
@@ -855,12 +967,12 @@ Inceed offers: IT staffing, Accounting/Finance staffing, direct hire placement, 
         known_pain,
         region,
         notes,
-        website_sources: websiteData.pages,
-        company_context: {
+        website_sources: stripNullBytes(websiteData.pages),
+        company_context: stripNullBytes({
           input_context: contextParts.slice(0, 10),
           lead_source,
           initial_interest,
-        },
+        }),
         company_briefing: companyBriefing,
         company_briefing_md: briefingMd,
         status: "ready",
