@@ -227,15 +227,15 @@ const COMPANY_BRIEFING_SCHEMA = {
       },
       required: ["score", "positive_signals", "concerns", "recommendation"],
     },
-    // NEW: Why They Need Staffing
-    why_they_need_staffing: {
+    // NEW: Why They Need You
+    why_they_need_you: {
       type: "object",
       properties: {
         pain_point_explanation: { type: "string" },
         business_context: { type: "string" },
-        inceed_value_connection: { type: "string" },
+        value_connection: { type: "string" },
       },
-      required: ["pain_point_explanation", "business_context", "inceed_value_connection"],
+      required: ["pain_point_explanation", "business_context", "value_connection"],
     },
     // NEW: Common Objections
     common_objections: {
