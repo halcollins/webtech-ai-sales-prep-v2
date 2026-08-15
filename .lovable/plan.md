@@ -73,6 +73,21 @@ A recursive `stripNullBytes` helper in each edge function, applied to `companyBr
 
 Only the `recommended_inceed_angle` reference inside the CRM copy string builder (line 205) is touched. The admin visibility logic in that file is left exactly as-is.
 
+## Out of scope (explicit)
+
+- No UI for `company_profile` — no setup wizard, admin editor, settings screen, or form. The single row is managed in the backend dashboard.
+- No `rep_profiles` table or any per-user profile concept.
+- No outreach generation: no email drafts, subject lines, call scripts, or voicemail scripts.
+- No structural change to `briefings` or `briefing_contacts` — no new or altered columns.
+- No change to existing RLS policies on `briefings`, `briefing_contacts`, `user_roles`, or `profiles`. Only new policies for `company_profile`.
+- No change to authentication, routing, `App.tsx`, `ProtectedRoute`, `AdminProtectedRoute`, or anything under `src/pages/admin/`.
+- `ai_technology_investments` and `recent_news` are not added to the edge function schema or prompt.
+- No restyling, redesign, or reorganization of any component.
+
+On completion I will report every file changed and confirm that the build and a TypeScript check both pass with no errors.
+
+
+
 
 ## Technical notes
 
