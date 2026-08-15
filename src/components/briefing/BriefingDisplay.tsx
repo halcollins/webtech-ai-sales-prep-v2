@@ -446,7 +446,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">For Recruiter</p>
+                <p className="text-xs text-muted-foreground mb-2 font-medium">First Touch</p>
                 <ul className="space-y-1.5">
                   {briefing.conversation_hooks.for_first_touch.map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">
@@ -457,7 +457,7 @@ export function BriefingDisplay({ briefing, contactEnrichment, briefingMd, conta
                 </ul>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">For Sales</p>
+                <p className="text-xs text-muted-foreground mb-2 font-medium">Live Conversation</p>
                 <ul className="space-y-1.5">
                   {briefing.conversation_hooks.for_live_conversation.map((hook, i) => (
                     <li key={i} className="text-sm flex gap-2">

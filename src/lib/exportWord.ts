@@ -248,13 +248,13 @@ export async function exportBriefingToWord(
   hooks.discovery_questions.forEach((q, i) => children.push(createBulletPoint(`${i + 1}. ${q}`)));
 
   children.push(new Paragraph({
-    children: [new TextRun({ text: "For Recruiter Conversations:", bold: true })],
+    children: [new TextRun({ text: "First Touch:", bold: true })],
     spacing: { before: 200, after: 80 },
   }));
   hooks.for_first_touch.forEach(hook => children.push(createBulletPoint(hook)));
 
   children.push(new Paragraph({
-    children: [new TextRun({ text: "For Sales Conversations:", bold: true })],
+    children: [new TextRun({ text: "Live Conversation:", bold: true })],
     spacing: { before: 150, after: 80 },
   }));
   hooks.for_live_conversation.forEach(hook => children.push(createBulletPoint(hook)));
