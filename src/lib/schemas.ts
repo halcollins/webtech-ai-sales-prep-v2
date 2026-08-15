@@ -90,29 +90,29 @@ export const companyBriefingSchema = z.object({
       description: z.string(),
     })).optional(),
     strategic_positioning: z.string().nullable().optional(),
-    staffing_implication: z.string().nullable().optional(),
+    why_it_matters: z.string().nullable().optional(),
     research_available: z.boolean(),
   }).optional(),
   // Recent News That Matters (from Perplexity research)
   recent_news: z.object({
     items: z.array(z.object({
       news_item: z.string(),
-      staffing_implication: z.string(),
+      why_it_matters: z.string(),
     })).optional(),
     research_available: z.boolean(),
   }).optional(),
-  // Qualification Assessment for new reps
+  // Qualification Assessment
   qualification_assessment: z.object({
     score: z.enum(["Strong fit", "Possible fit", "Needs validation", "Likely not a fit"]),
     positive_signals: z.array(z.string()),
     concerns: z.array(z.string()),
     recommendation: z.string(),
   }).optional(),
-  // Why They Need Staffing (educational for new reps)
-  why_they_need_staffing: z.object({
+  // Why They Need You
+  why_they_need_you: z.object({
     pain_point_explanation: z.string(),
     business_context: z.string(),
-    inceed_value_connection: z.string(),
+    value_connection: z.string(),
   }).optional(),
   // Common Objections with responses
   common_objections: z.array(
@@ -122,30 +122,30 @@ export const companyBriefingSchema = z.object({
       suggested_response: z.string(),
     })
   ).optional(),
-  // FAQ for new reps
-  new_rep_faq: z.array(
+  // If They Ask
+  if_they_ask: z.array(
     z.object({
       question: z.string(),
       answer_framework: z.string(),
     })
   ).optional(),
-  likely_hiring_and_gaps: z.array(
+  identified_gaps: z.array(
     z.object({
-      role_title: z.string(),
+      gap_title: z.string(),
       why_it_matters: z.string(),
-      difficulty_to_fill_stars: z.number().min(1).max(5),
-      contract_vs_fte_likelihood: z.string(),
-      common_skills: z.array(z.string()),
+      urgency_stars: z.number().min(1).max(5),
+      addressed_by_offering: z.string(),
+      supporting_evidence: z.array(z.string()),
     })
   ),
   conversation_hooks: z.object({
-    for_recruiter: z.array(z.string()),
-    for_sales: z.array(z.string()),
+    for_first_touch: z.array(z.string()),
+    for_live_conversation: z.array(z.string()),
     sample_opener_script: z.string(),
     discovery_questions: z.array(z.string()),
     red_flags_to_listen_for: z.array(z.string()),
   }),
-  recommended_inceed_angle: z.object({
+  recommended_angle: z.object({
     primary_service_to_lead_with: z.string(),
     why_this_fits: z.array(z.string()),
     what_not_to_pitch_first: z.array(z.string()),
