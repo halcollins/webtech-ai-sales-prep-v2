@@ -174,7 +174,7 @@ export function CompanyForm({ onSubmit, isLoading, defaultValues }: CompanyFormP
             <Label htmlFor="initial_interest">What made you think they might be a fit?</Label>
             <Textarea
               id="initial_interest"
-              placeholder="e.g., Saw they posted 5 developer roles last month, or heard they're expanding their IT team..."
+              placeholder="e.g., Saw they posted for proposals last month, or heard they're expanding their marketing..."
               {...register("initial_interest")}
               className="bg-secondary/50 min-h-[80px]"
             />
