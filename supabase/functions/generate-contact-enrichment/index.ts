@@ -427,7 +427,7 @@ BACKGROUND & CAREER CONTEXT SECTION:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3.6-flash",
+        model: profile.ai_model,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
