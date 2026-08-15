@@ -195,7 +195,7 @@ const COMPANY_BRIEFING_SCHEMA = {
             type: "object",
             properties: {
               url: { type: "string" },
-              type: { type: "string", enum: ["homepage", "about", "careers", "contact", "team", "other"] },
+              type: { type: "string", enum: ["homepage", "about", "services", "news", "careers", "contact", "team", "other"] },
               fetch_status: { type: "string", enum: ["ok", "failed"] },
             },
             required: ["url", "type", "fetch_status"],
