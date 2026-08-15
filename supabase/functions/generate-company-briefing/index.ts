@@ -562,16 +562,16 @@ ${briefing.qualification_assessment.concerns.map((c: string) => `⚠️ ${c}`).j
 ### Recommendation
 ${briefing.qualification_assessment.recommendation}
 
-## Why Staffing Makes Sense Here
+## Why They Need Us
 
 ### The Pain Point
-${briefing.why_they_need_staffing.pain_point_explanation}
+${briefing.why_they_need_you.pain_point_explanation}
 
 ### Business Context
-${briefing.why_they_need_staffing.business_context}
+${briefing.why_they_need_you.business_context}
 
-### How Inceed Helps
-${briefing.why_they_need_staffing.inceed_value_connection}
+### How We Help
+${briefing.why_they_need_you.value_connection}
 
 ## If They Push Back...
 ${briefing.common_objections
