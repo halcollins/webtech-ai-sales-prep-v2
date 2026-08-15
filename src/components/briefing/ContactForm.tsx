@@ -37,9 +37,7 @@ export function ContactForm({ onSubmit, isLoading, defaultValues }: ContactFormP
             <User className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">Contact Information</CardTitle>
           </div>
-          <CardDescription>
-            Enrich the briefing for a specific person
-          </CardDescription>
+          <CardDescription>Enrich the briefing for a specific person</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -53,16 +51,14 @@ export function ContactForm({ onSubmit, isLoading, defaultValues }: ContactFormP
                 {...register("person_name")}
                 className="bg-secondary/50"
               />
-              {errors.person_name && (
-                <p className="text-sm text-destructive">{errors.person_name.message}</p>
-              )}
+              {errors.person_name && <p className="text-sm text-destructive">{errors.person_name.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="person_title">Title (Optional)</Label>
               <Input
                 id="person_title"
-                placeholder="Chief Technology Officer"
+                placeholder="VP, CMO, etc."
                 {...register("person_title")}
                 className="bg-secondary/50"
               />
@@ -82,15 +78,11 @@ export function ContactForm({ onSubmit, isLoading, defaultValues }: ContactFormP
               {...register("linkedin_url")}
               className="bg-secondary/50"
             />
-            {errors.linkedin_url && (
-              <p className="text-sm text-destructive">{errors.linkedin_url.message}</p>
-            )}
+            {errors.linkedin_url && <p className="text-sm text-destructive">{errors.linkedin_url.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="linkedin_text">
-              LinkedIn Summary (Optional)
-            </Label>
+            <Label htmlFor="linkedin_text">LinkedIn Summary (Optional)</Label>
             <Textarea
               id="linkedin_text"
               placeholder="Paste headline, about section, or summary here if you want better accuracy. We never scrape LinkedIn — only use what you provide."
@@ -105,12 +97,7 @@ export function ContactForm({ onSubmit, isLoading, defaultValues }: ContactFormP
       </Card>
 
       <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="lg"
-          disabled={isLoading}
-          className="gap-2 min-w-[200px] shadow-glow"
-        >
+        <Button type="submit" size="lg" disabled={isLoading} className="gap-2 min-w-[200px] shadow-glow">
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
