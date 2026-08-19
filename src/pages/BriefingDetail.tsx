@@ -399,6 +399,15 @@ Confidence: ${b.assumptions_and_confidence.confidence_score_0_100}%`;
                 JSON
               </Button>
               <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportHtml}
+                className="gap-2"
+              >
+                <FileCode className="h-4 w-4" aria-hidden="true" />
+                HTML Brief
+              </Button>
+              <Button
                 variant="default"
                 size="sm"
                 onClick={handleExportWord}
