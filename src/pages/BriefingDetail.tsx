@@ -14,10 +14,11 @@ import { useToast } from "@/hooks/use-toast";
 import { CompanyBriefing, ContactEnrichment, ContactFormData } from "@/lib/schemas";
 import { 
   ChevronLeft, ExternalLink, Download, Copy, 
-  Building2, Clock, UserPlus, Check, FileText
+  Building2, Clock, UserPlus, Check, FileText, FileCode
 } from "lucide-react";
 import { format } from "date-fns";
 import { exportBriefingToWord } from "@/lib/exportWord";
+import { exportBriefingToHtml } from "@/lib/exportHtml";
 
 interface Briefing {
   id: string;
