@@ -14,10 +14,11 @@ import { useToast } from "@/hooks/use-toast";
 import { CompanyBriefing, ContactEnrichment, ContactFormData } from "@/lib/schemas";
 import { 
   ChevronLeft, ExternalLink, Download, Copy, 
-  Building2, Clock, UserPlus, Check, FileText
+  Building2, Clock, UserPlus, Check, FileText, FileCode
 } from "lucide-react";
 import { format } from "date-fns";
 import { exportBriefingToWord } from "@/lib/exportWord";
+import { exportBriefingToHtml } from "@/lib/exportHtml";
 
 interface Briefing {
   id: string;
@@ -248,8 +249,31 @@ Confidence: ${b.assumptions_and_confidence.confidence_score_0_100}%`;
     URL.revokeObjectURL(url);
   };
 
+  const handleExportHtml = () => {
+    if (!briefing?.company_briefing) return;
+    const contactForExport = contacts.length > 0 ? contacts[contacts.length - 1] : null;
+    try {
+      exportBriefingToHtml(
+        briefing.company_name,
+        briefing.company_url,
+        briefing.company_briefing,
+        contactForExport?.contact_enrichment,
+        briefing.created_at
+      );
+      toast({ title: "Exported!", description: "HTML brief downloaded successfully" });
+    } catch (error) {
+      console.error("Error exporting to HTML:", error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to generate HTML brief",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleExportWord = async () => {
     if (!briefing?.company_briefing) return;
+    
     
     const contactForExport = contacts.length > 0 ? contacts[contacts.length - 1] : null;
     
@@ -373,6 +397,15 @@ Confidence: ${b.assumptions_and_confidence.confidence_score_0_100}%`;
               >
                 <Download className="h-4 w-4" />
                 JSON
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportHtml}
+                className="gap-2"
+              >
+                <FileCode className="h-4 w-4" aria-hidden="true" />
+                HTML Brief
               </Button>
               <Button
                 variant="default"
