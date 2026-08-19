@@ -249,8 +249,31 @@ Confidence: ${b.assumptions_and_confidence.confidence_score_0_100}%`;
     URL.revokeObjectURL(url);
   };
 
+  const handleExportHtml = () => {
+    if (!briefing?.company_briefing) return;
+    const contactForExport = contacts.length > 0 ? contacts[contacts.length - 1] : null;
+    try {
+      exportBriefingToHtml(
+        briefing.company_name,
+        briefing.company_url,
+        briefing.company_briefing,
+        contactForExport?.contact_enrichment,
+        briefing.created_at
+      );
+      toast({ title: "Exported!", description: "HTML brief downloaded successfully" });
+    } catch (error) {
+      console.error("Error exporting to HTML:", error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to generate HTML brief",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleExportWord = async () => {
     if (!briefing?.company_briefing) return;
+    
     
     const contactForExport = contacts.length > 0 ? contacts[contacts.length - 1] : null;
     
